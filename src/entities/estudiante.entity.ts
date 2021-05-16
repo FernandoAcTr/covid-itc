@@ -14,7 +14,7 @@ export class Estudiante extends Persona {
   @PrimaryGeneratedColumn('uuid')
   estudiante_id: string
 
-  @ManyToOne(() => Carrera, {
+  @ManyToOne(() => Carrera, (carrera) => carrera.estudiantes, {
     eager: true,
     cascade: true,
     onDelete: 'RESTRICT',

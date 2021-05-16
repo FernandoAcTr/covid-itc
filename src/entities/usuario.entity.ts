@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Alerta } from './alerta.entity'
 
 export enum UserStatus {
   HABILITADO = 'HABILITADO',
@@ -25,4 +26,7 @@ export class Usuario {
 
   @Column({ default: false })
   sospechoso: Boolean
+
+  @OneToMany(() => Alerta, (alerta) => alerta.usuario)
+  alertas: Alerta[]
 }
