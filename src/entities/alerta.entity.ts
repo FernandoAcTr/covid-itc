@@ -20,7 +20,7 @@ export class Alerta {
   @Column({ type: 'text' })
   alerta: string
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.alertas)
+  @ManyToOne(() => Usuario, (usuario) => usuario.alertas, { cascade: true })
   @JoinColumn({ name: 'usuario_id' })
   usuario: Usuario
 
