@@ -11,12 +11,6 @@ createConnection({
   database: DB.NAME,
   synchronize: false,
   logging: false,
-  entities: ['build/entities/**/*.js'],
-  migrations: ['build/database/migrations/*.js'],
-  cli: {
-    entitiesDir: 'src/entities',
-    migrationsDir: 'src/database/migrations',
-  },
 })
   .then(() => {
     console.log('Mysql conection is online...')
