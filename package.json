@@ -9,9 +9,9 @@
     "clean": "rm -rf build & rm -rf node_modules",
     "build": "tsc",
     "start": "node build",
-    "migrations:run": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:run",
-    "migrations:revert": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:revert",
-    "migrations:generate": "ts-node --transpile-only node_modules/typeorm/cli.js migration:generate --pretty --name"
+    "migrations:run": "ts-node ./node_modules/typeorm/cli.js migration:run",
+    "migrations:revert": "ts-node ./node_modules/typeorm/cli.js migration:revert",
+    "migrations:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate --name"
   },
   "author": "",
   "license": "ISC",
