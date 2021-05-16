@@ -1,5 +1,13 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
 import { Alerta } from './alerta.entity'
+import { Rol } from './rol.entity'
 
 export enum UserStatus {
   HABILITADO = 'HABILITADO',
@@ -29,4 +37,12 @@ export class Usuario {
 
   @OneToMany(() => Alerta, (alerta) => alerta.usuario)
   alertas: Alerta[]
+
+  @ManyToMany(() => Rol, { eager: true })
+  @JoinTable({
+    name: 'usuario_rol',
+    joinColumn: { name: 'usuario_id', referencedColumnName: 'usuario_id' },
+    inverseJoinColumn: { name: 'rol_id', referencedColumnName: 'rol_id' },
+  })
+  roles: Rol[]
 }
