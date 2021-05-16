@@ -22,7 +22,7 @@ export class Usuario {
   @Column({ length: 100 })
   email: string
 
-  @Column({ length: 72 })
+  @Column({ length: 72, select: false })
   password: string
 
   @Column({
