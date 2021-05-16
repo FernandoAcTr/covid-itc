@@ -1,5 +1,10 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
+export enum UserStatus {
+  HABILITADO = 'HABILITADO',
+  DESHABILITADO = 'DESHABILITADO',
+}
+
 @Entity()
 export class Usuario {
   @PrimaryGeneratedColumn('uuid')
@@ -11,9 +16,13 @@ export class Usuario {
   @Column({ length: 72 })
   password: string
 
-  @Column()
-  status: Boolean
+  @Column({
+    type: 'enum',
+    enum: UserStatus,
+    default: UserStatus.HABILITADO,
+  })
+  status: UserStatus
 
-  @Column()
+  @Column({ default: false })
   sospechoso: Boolean
 }
