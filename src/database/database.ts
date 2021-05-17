@@ -11,6 +11,7 @@ createConnection({
   database: DB.NAME,
   synchronize: false,
   logging: false,
+  entities: ['build/entities/*.entity.js'],
 })
   .then(() => {
     console.log('Mysql conection is online...')

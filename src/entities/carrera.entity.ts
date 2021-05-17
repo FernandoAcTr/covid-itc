@@ -1,10 +1,10 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm'
 import { Departamento } from './departamento.entity'
 import { Estudiante } from './estudiante.entity'
 
 @Entity()
 export class Carrera {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   carrera_id: number
 
   @Column()

@@ -19,10 +19,10 @@ export class Usuario {
   @PrimaryGeneratedColumn('uuid')
   usuario_id: string
 
-  @Column({ length: 100 })
+  @Column({ length: 100, unique: true })
   email: string
 
-  @Column({ length: 72, select: false })
+  @Column({ length: 72 })
   password: string
 
   @Column({
@@ -38,7 +38,7 @@ export class Usuario {
   @OneToMany(() => Alerta, (alerta) => alerta.usuario)
   alertas: Alerta[]
 
-  @ManyToMany(() => Rol, { eager: true })
+  @ManyToMany(() => Rol, { eager: true, cascade: true })
   @JoinTable({
     name: 'usuario_rol',
     joinColumn: { name: 'usuario_id', referencedColumnName: 'usuario_id' },

@@ -12,7 +12,7 @@ import { Usuario } from './usuario.entity'
 import { Medico } from './medico.entity'
 import { Multimedia } from './multimedia.entity'
 
-export enum ModalidadEnum {
+export enum ModalidadConsultaEnum {
   VIRTUAL = 'virtual',
   PRESCENCIAL = 'prescencial',
 }
@@ -30,8 +30,8 @@ export class SolicitudConsulta {
   @Column({ type: 'text' })
   sintomas: string
 
-  @Column({ type: 'enum', enum: ModalidadEnum })
-  modalidad: ModalidadEnum
+  @Column({ type: 'enum', enum: ModalidadConsultaEnum })
+  modalidad: ModalidadConsultaEnum
 
   @Column({ type: 'enum', enum: StatusEnum, default: StatusEnum.PENDIENTE })
   status: StatusEnum
