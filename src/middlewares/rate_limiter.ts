@@ -1,15 +1,7 @@
-import redis from 'redis'
-import { RateLimiterRedis } from 'rate-limiter-flexible'
+import { RateLimiterMemory } from 'rate-limiter-flexible'
 import { NextFunction, Request, Response } from 'express'
 
-const redisClient = redis.createClient({
-  host: 'redis',
-  port: 6379,
-  enable_offline_queue: false,
-})
-
-const rateLimiter = new RateLimiterRedis({
-  storeClient: redisClient,
+const rateLimiter = new RateLimiterMemory({
   keyPrefix: 'middleware',
   points: 5, // 5 requests
   duration: 1, // per 1 second by IP
@@ -29,4 +21,3 @@ export const rateLimiterMiddleware = (
       res.status(429).send('Too Many Requests')
     })
 }
-
