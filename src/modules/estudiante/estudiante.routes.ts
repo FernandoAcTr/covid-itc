@@ -22,14 +22,4 @@ router.post(
   Contoller.signup
 )
 
-router.post(
-  '/estudiantes/login',
-  [
-    check('email', 'El campo email no es un email valido').isEmail().notEmpty(),
-    check('password', 'La contraseña es obligatoria').notEmpty(),
-    validateBody,
-  ],
-  Contoller.login
-)
-
 export default router

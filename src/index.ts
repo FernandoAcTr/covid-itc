@@ -6,7 +6,7 @@ import { rateLimiterMiddleware } from './middlewares/rate_limiter'
 import { handleErrorMiddleware } from './middlewares/error_handler'
 
 //importin routes
-import routes from './routes/index.routes'
+import routes from './router'
 
 //importing configs
 import { settings } from './config/settings'
