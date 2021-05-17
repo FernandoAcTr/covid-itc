@@ -1,6 +1,9 @@
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
+import helmet from 'helmet'
+import { rateLimiterMiddleware } from './middlewares/rate_limiter'
+import { handleErrorMiddleware } from './middlewares/error_handler'
 
 //importin routes
 import routes from './routes/index.routes'
@@ -22,7 +25,9 @@ class Server {
   config() {}
 
   middlewares() {
+    this.app.use(rateLimiterMiddleware)
     this.app.use(morgan('dev'))
+    this.app.use(helmet())
     this.app.use(cors())
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: false }))
@@ -30,6 +35,7 @@ class Server {
 
   routes() {
     this.app.use(routes)
+    this.app.use(handleErrorMiddleware)
   }
 
   start() {
