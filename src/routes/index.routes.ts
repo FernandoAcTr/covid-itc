@@ -1,7 +1,9 @@
-import {Router} from 'express'
-const router = Router();
+import { Router } from 'express'
+const router = Router()
+
+import RouterStudent from '../modules/estudiante/estudiante.routes'
 
 //importing all routes here
-router.get('/', (req, res) => res.json({ hello: 'Wordl' }));
+router.use(RouterStudent)
 
-export default router;
+export default router
