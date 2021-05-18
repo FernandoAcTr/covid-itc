@@ -6,6 +6,7 @@ export enum RolEnum {
   MONITOR = 'monitor',
   ADMINISTRADOR = 'administrador',
   DIRECTIVO = 'directivo',
+  MEDICO = 'medico',
 }
 
 @Entity()

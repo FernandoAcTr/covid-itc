@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
-import { getCustomRepository, getRepository, createQueryBuilder } from 'typeorm'
+import {
+  getCustomRepository,
+  getRepository,
+  createQueryBuilder,
+  In,
+} from 'typeorm'
 import { Carrera, Estudiante, Rol, RolEnum, Usuario } from '../../entities'
 import { requireSurvey } from '../../helpers/require_surver.helper'
 import { ErrorHandler } from '../../middlewares/error_handler'
@@ -11,8 +16,9 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
 
   try {
     // Create user Role
-    const userRol = new Rol()
-    userRol.rol = RolEnum.ESTUDIANTE
+    const userRol = await getRepository(Rol).findOneOrFail({
+      where: { rol: In([RolEnum.ESTUDIANTE]) },
+    })
 
     //create user
     const usuario = new Usuario()
@@ -68,6 +74,7 @@ export async function findAll(req: Request, res: Response, next: NextFunction) {
   const estudiantes = await createQueryBuilder(Estudiante, 'e')
     .leftJoinAndSelect('e.usuario', 'u')
     .leftJoinAndSelect('e.carrera', 'c')
+    .leftJoinAndSelect('u.roles', 'r')
     .getMany()
 
   res.json(estudiantes)
@@ -75,11 +82,14 @@ export async function findAll(req: Request, res: Response, next: NextFunction) {
 
 //TODO proteger ruta por administrador
 export async function edit(req: Request, res: Response, next: NextFunction) {
-  const { nombre, a_paterno, a_materno, carrera_id, estudiante_id } = req.body
+  const { nombre, a_paterno, a_materno, carrera_id } = req.body
+  const { estudiante_id } = req.params
 
   try {
     //find carrer
-    const carrera = await getRepository(Carrera).findOneOrFail(carrera_id)
+    const carrera = await getRepository(Carrera).findOne({
+      where: { carrera_id },
+    })
 
     //find student
     const estudiante = await getRepository(Estudiante).findOneOrFail(
