@@ -9,11 +9,6 @@ import {
 import { Alerta } from './alerta.entity'
 import { Rol } from './rol.entity'
 
-export enum UserStatus {
-  HABILITADO = 'HABILITADO',
-  DESHABILITADO = 'DESHABILITADO',
-}
-
 @Entity()
 export class Usuario {
   @PrimaryGeneratedColumn('uuid')
@@ -26,11 +21,9 @@ export class Usuario {
   password: string
 
   @Column({
-    type: 'enum',
-    enum: UserStatus,
-    default: UserStatus.HABILITADO,
+    default: true,
   })
-  status: UserStatus
+  habilitado: Boolean
 
   @Column({ default: false })
   sospechoso: Boolean

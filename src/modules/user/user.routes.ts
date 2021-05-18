@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import * as Contoller from './user.controller'
+import * as Controller from './user.controller'
 import { check } from 'express-validator'
 import { validateBody } from '../../middlewares/validate_body'
 
@@ -12,7 +12,9 @@ router.post(
     check('password', 'La contraseña es obligatoria').notEmpty(),
     validateBody,
   ],
-  Contoller.login
+  Controller.login
 )
+
+router.delete('/usuarios/:usuario_id', Controller.disableUser)
 
 export default router

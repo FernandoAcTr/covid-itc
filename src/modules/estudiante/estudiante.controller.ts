@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { getCustomRepository, getRepository } from 'typeorm'
+import { getCustomRepository, getRepository, createQueryBuilder } from 'typeorm'
 import { Carrera, Estudiante, Rol, RolEnum, Usuario } from '../../entities'
 import { requireSurvey } from '../../helpers/require_surver.helper'
 import { ErrorHandler } from '../../middlewares/error_handler'
@@ -44,7 +44,32 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export function findOne(req: Request, res: Response, next: NextFunction) {}
+//TODO hacer que solo el estudiante logueado o administrador puedan ver la informacion de este estudiante
+export async function findOne(req: Request, res: Response, next: NextFunction) {
+  const { estudiante_id } = req.params
+
+  try {
+    const estudiante = await getRepository(Estudiante).findOne(estudiante_id)
+    if (!estudiante)
+      return next(
+        new ErrorHandler(404, 'No existe el estudiante con id ' + estudiante_id)
+      )
+
+    res.json(estudiante)
+  } catch (error) {
+    next(new ErrorHandler(500, error.message))
+  }
+}
+
+//TODO proteger ruta por administrador
+export async function findAll(req: Request, res: Response, next: NextFunction) {
+  const estudiantes = await createQueryBuilder(Estudiante, 'e')
+    .leftJoinAndSelect('e.usuario', 'u')
+    .leftJoinAndSelect('e.carrera', 'c')
+    .getMany()
+
+  res.json(estudiantes)
+}
 
 export function responseSurvey(
   req: Request,

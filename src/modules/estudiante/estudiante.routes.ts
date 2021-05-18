@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import * as Contoller from './estudiante.controller'
+import * as Controller from './estudiante.controller'
 import { check } from 'express-validator'
 import { existCarrer } from '../../middlewares/express_validators'
 import { validateBody } from '../../middlewares/validate_body'
@@ -19,7 +19,12 @@ router.post(
       .custom(existCarrer),
     validateBody,
   ],
-  Contoller.signup
+  Controller.signup
 )
+
+router.get('/estudiantes/:estudiante_id', Controller.findOne)
+
+//TODO proteger ruta por administrador
+router.get('/estudiantes', Controller.findAll)
 
 export default router
