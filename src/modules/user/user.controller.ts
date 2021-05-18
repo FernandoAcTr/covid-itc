@@ -26,6 +26,15 @@ export async function login(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+export async function findAll(req: Request, res: Response, next: NextFunction) {
+  try {
+    const usuarios = await getRepository(Usuario).find()
+    res.json(usuarios)
+  } catch (error) {
+    next(new ErrorHandler(500, error.message))
+  }
+}
+
 //TODO proteger ruta por administrador
 export async function disableUser(
   req: Request,
@@ -34,13 +43,17 @@ export async function disableUser(
 ) {
   const { usuario_id } = req.params
 
-  const usuario = await getRepository(Usuario).findOne(usuario_id)
-  if (!usuario)
-    return next(
-      new ErrorHandler(404, 'No existe un usuario con id' + usuario_id)
-    )
+  try {
+    const usuario = await getRepository(Usuario).findOne(usuario_id)
+    if (!usuario)
+      return next(
+        new ErrorHandler(404, 'No existe un usuario con id' + usuario_id)
+      )
 
-  usuario.habilitado = false
-  const saved = await getRepository(Usuario).save(usuario)
-  res.json(saved)
+    usuario.habilitado = false
+    const saved = await getRepository(Usuario).save(usuario)
+    res.json(saved)
+  } catch (error) {
+    next(new ErrorHandler(500, error.message))
+  }
 }

@@ -15,6 +15,8 @@ router.post(
   Controller.login
 )
 
+router.get('/usuarios', Controller.findAll)
+
 router.delete('/usuarios/:usuario_id', Controller.disableUser)
 
 export default router
