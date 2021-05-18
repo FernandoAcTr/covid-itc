@@ -35,6 +35,9 @@ export class Usuario {
   @Column({ default: false })
   sospechoso: Boolean
 
+  @Column()
+  requireSuvey: Boolean
+
   @OneToMany(() => Alerta, (alerta) => alerta.usuario)
   alertas: Alerta[]
 

@@ -8,6 +8,7 @@ export function validateBody(req: Request, res: Response, next: NextFunction) {
 
   if (!errors.isEmpty()) {
     return res.status(400).json({
+      statusCode: 400,
       message: arrayErrors.map((error) => error.msg),
     })
   }

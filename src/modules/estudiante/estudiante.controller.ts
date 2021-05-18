@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { getCustomRepository, getRepository } from 'typeorm'
 import { Carrera, Estudiante, Rol, RolEnum, Usuario } from '../../entities'
+import { requireSurvey } from '../../helpers/require_surver.helper'
 import { ErrorHandler } from '../../middlewares/error_handler'
 import { UserRepository } from '../user/user.repository'
 
@@ -18,6 +19,7 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
     usuario.email = email
     usuario.password = userRepository.encrypPassword(password)
     usuario.roles = [userRol]
+    usuario.requireSuvey = await requireSurvey()
 
     //find carrer
     const carrera = await getRepository(Carrera).findOneOrFail(carrera_id)
