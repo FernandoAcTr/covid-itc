@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
-import { getCustomRepository, getRepository } from 'typeorm'
+import { getCustomRepository, getRepository, In } from 'typeorm'
 import { UserRepository } from './user.repository'
 import { ErrorHandler } from '../../middlewares/error_handler'
-import { Usuario } from '../../entities'
+import { Rol, Usuario } from '../../entities'
 
 export async function login(req: Request, res: Response, next: NextFunction) {
   const { email, password } = req.body
@@ -75,7 +75,8 @@ export async function updateUser(
   res: Response,
   next: NextFunction
 ) {
-  const { email, password, habilitado, sospechoso, requireSurvey } = req.body
+  const { email, password, habilitado, sospechoso, requireSurvey, roles } =
+    req.body
   const { usuario_id } = req.params
 
   const userRepository = getCustomRepository(UserRepository)
@@ -90,6 +91,13 @@ export async function updateUser(
     user.sospechoso = sospechoso !== undefined ? sospechoso : user.sospechoso
     user.requireSuvey =
       requireSurvey !== undefined ? requireSurvey : user.requireSuvey
+
+    //update roles
+    user.roles = roles
+      ? await getRepository(Rol).find({
+          where: { rol: In(roles) },
+        })
+      : user.roles
 
     const saved = await userRepository.save(user)
     res.json(saved)

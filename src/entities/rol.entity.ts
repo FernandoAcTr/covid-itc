@@ -13,6 +13,6 @@ export class Rol {
   @PrimaryGeneratedColumn()
   rol_id: number
 
-  @Column({ type: 'enum', enum: RolEnum })
+  @Column({ type: 'enum', enum: RolEnum, unique: true })
   rol: RolEnum
 }

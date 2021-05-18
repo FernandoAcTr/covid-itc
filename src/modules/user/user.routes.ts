@@ -2,6 +2,7 @@ import { Router } from 'express'
 import * as Controller from './user.controller'
 import { check } from 'express-validator'
 import { validateBody } from '../../middlewares/validate_body'
+import { validateRoles } from '../../middlewares/express_validators'
 
 const router = Router()
 
@@ -24,6 +25,7 @@ router.put(
   '/usuarios/:usuario_id',
   [
     check('email', 'El campo email no es un email valido').optional().isEmail(),
+    check('roles').optional().custom(validateRoles),
     validateBody,
   ],
   Controller.updateUser

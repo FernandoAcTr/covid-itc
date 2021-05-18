@@ -34,7 +34,7 @@ export class Usuario {
   @OneToMany(() => Alerta, (alerta) => alerta.usuario)
   alertas: Alerta[]
 
-  @ManyToMany(() => Rol, { eager: true, cascade: true })
+  @ManyToMany(() => Rol, { eager: true })
   @JoinTable({
     name: 'usuario_rol',
     joinColumn: { name: 'usuario_id', referencedColumnName: 'usuario_id' },
