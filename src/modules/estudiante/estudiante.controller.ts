@@ -49,7 +49,9 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
   const { estudiante_id } = req.params
 
   try {
-    const estudiante = await getRepository(Estudiante).findOne(estudiante_id)
+    const estudiante = await getRepository(Estudiante).findOne(estudiante_id, {
+      relations: ['usuario'],
+    })
     if (!estudiante)
       return next(
         new ErrorHandler(404, 'No existe el estudiante con id ' + estudiante_id)
@@ -69,6 +71,30 @@ export async function findAll(req: Request, res: Response, next: NextFunction) {
     .getMany()
 
   res.json(estudiantes)
+}
+
+//TODO proteger ruta por administrador
+export async function edit(req: Request, res: Response, next: NextFunction) {
+  const { nombre, a_paterno, a_materno, carrera_id, estudiante_id } = req.body
+
+  try {
+    //find carrer
+    const carrera = await getRepository(Carrera).findOneOrFail(carrera_id)
+
+    //find student
+    const estudiante = await getRepository(Estudiante).findOneOrFail(
+      estudiante_id
+    )
+    estudiante.nombre = nombre || estudiante.nombre
+    estudiante.a_materno = a_materno || estudiante.a_materno
+    estudiante.a_paterno = a_paterno || estudiante.a_paterno
+    estudiante.carrera = carrera || estudiante.carrera
+
+    const saved = await getRepository(Estudiante).save(estudiante)
+    res.json(saved)
+  } catch (error) {
+    next(new ErrorHandler(500, error.message))
+  }
 }
 
 export function responseSurvey(

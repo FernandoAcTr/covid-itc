@@ -16,7 +16,17 @@ router.post(
 )
 
 router.get('/usuarios', Controller.findAll)
+router.get('/usuarios/:usuario_id', Controller.findOne)
 
 router.delete('/usuarios/:usuario_id', Controller.disableUser)
+
+router.put(
+  '/usuarios/:usuario_id',
+  [
+    check('email', 'El campo email no es un email valido').optional().isEmail(),
+    validateBody,
+  ],
+  Controller.updateUser
+)
 
 export default router

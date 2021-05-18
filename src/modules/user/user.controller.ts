@@ -11,13 +11,14 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     const user = await userRepository.findOne({
       where: { email },
     })
-    if (!user?.habilitado)
-      return next(new ErrorHandler(401, 'Usuario dehsabilitado'))
 
     if (!user) return next(new ErrorHandler(404, 'Credenciales invalidas'))
 
     const match = userRepository.comparePassword(user!, password)
     if (!match) return next(new ErrorHandler(404, 'Credenciales invalidas'))
+
+    if (!user?.habilitado)
+      return next(new ErrorHandler(401, 'Usuario dehsabilitado'))
 
     const token = userRepository.createToken(user!)
     res.json({ token, usuario: user })
@@ -30,6 +31,17 @@ export async function findAll(req: Request, res: Response, next: NextFunction) {
   try {
     const usuarios = await getRepository(Usuario).find()
     res.json(usuarios)
+  } catch (error) {
+    next(new ErrorHandler(500, error.message))
+  }
+}
+
+export async function findOne(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { usuario_id } = req.params
+    const usuario = await getRepository(Usuario).findOne(usuario_id)
+    if (!usuario) return next(new ErrorHandler(404, 'Usuario no encontrado'))
+    res.json(usuario)
   } catch (error) {
     next(new ErrorHandler(500, error.message))
   }
@@ -52,6 +64,34 @@ export async function disableUser(
 
     usuario.habilitado = false
     const saved = await getRepository(Usuario).save(usuario)
+    res.json(saved)
+  } catch (error) {
+    next(new ErrorHandler(500, error.message))
+  }
+}
+
+export async function updateUser(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { email, password, habilitado, sospechoso, requireSurvey } = req.body
+  const { usuario_id } = req.params
+
+  const userRepository = getCustomRepository(UserRepository)
+  try {
+    const user = await userRepository.findOneOrFail(usuario_id)
+    user.email = email || user.email
+    user.password =
+      password !== undefined
+        ? userRepository.encrypPassword(password)
+        : user.password
+    user.habilitado = habilitado !== undefined ? habilitado : user.habilitado
+    user.sospechoso = sospechoso !== undefined ? sospechoso : user.sospechoso
+    user.requireSuvey =
+      requireSurvey !== undefined ? requireSurvey : user.requireSuvey
+
+    const saved = await userRepository.save(user)
     res.json(saved)
   } catch (error) {
     next(new ErrorHandler(500, error.message))

@@ -27,4 +27,15 @@ router.get('/estudiantes/:estudiante_id', Controller.findOne)
 //TODO proteger ruta por administrador
 router.get('/estudiantes', Controller.findAll)
 
+router.put(
+  '/estudiantes/:estudiante_id',
+  [
+    check('carrera_id', 'El campo carrera_id es obligatorio')
+      .optional()
+      .custom(existCarrer),
+    validateBody,
+  ],
+  Controller.edit
+)
+
 export default router
