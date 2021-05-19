@@ -7,7 +7,7 @@ import { validateRoles } from '../../middlewares/express_validators'
 const router = Router()
 
 router.post(
-  '/usuarios/login',
+  '/login',
   [
     check('email', 'El campo email no es un email valido').isEmail().notEmpty(),
     check('password', 'La contraseña es obligatoria').notEmpty(),
@@ -16,13 +16,13 @@ router.post(
   Controller.login
 )
 
-router.get('/usuarios', Controller.findAll)
-router.get('/usuarios/:usuario_id', Controller.findOne)
+router.get('', Controller.findAll)
+router.get('/:usuario_id', Controller.findOne)
 
-router.delete('/usuarios/:usuario_id', Controller.disableUser)
+router.delete('/:usuario_id', Controller.disableUser)
 
 router.put(
-  '/usuarios/:usuario_id',
+  '/:usuario_id',
   [
     check('email', 'El campo email no es un email valido').optional().isEmail(),
     check('roles').optional().custom(validateRoles),

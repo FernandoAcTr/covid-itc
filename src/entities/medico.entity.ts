@@ -21,7 +21,7 @@ export class Medico extends Persona {
 
   @ManyToOne(() => Usuario, {
     cascade: true,
-    onDelete: 'SET NULL',
+    onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'usuario_id' })

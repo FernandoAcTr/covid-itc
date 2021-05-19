@@ -1,7 +1,6 @@
 import { Router } from 'express'
-import * as Controller from './estudiante.controller'
+import * as Controller from './medico.controller'
 import { check } from 'express-validator'
-import { existCarrer } from '../../middlewares/express_validators'
 import { validateBody } from '../../middlewares/validate_body'
 
 const router = Router()
@@ -14,16 +13,13 @@ router.post(
     check('nombre', 'El campo nombre es obligatorio').notEmpty(),
     check('a_materno', 'El campo a_materno es obligatorio').notEmpty(),
     check('a_paterno', 'El campo a_paterno es obligatorio').notEmpty(),
-    check('carrera_id', 'El campo carrera_id es obligatorio')
-      .notEmpty()
-      .custom(existCarrer),
+    check('cedula', 'El campo cedula es obligatorio').notEmpty(),
+    check('rfc', 'El campo rfc es obligatorio').notEmpty(),
     validateBody,
   ],
   Controller.signup
 )
-
 router.get('/', Controller.findAll)
-router.get('/:estudiante_id', Controller.findOne)
-router.put('/:estudiante_id', Controller.edit)
-
+router.get('/:medico_id', Controller.findOne)
+router.put('/:medico_id', Controller.edit)
 export default router

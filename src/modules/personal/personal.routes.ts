@@ -6,7 +6,7 @@ import { check } from 'express-validator'
 const router = Router()
 
 router.post(
-  '/personal/signup',
+  '/signup',
   [
     check('email', 'El campo email no es un email valido').isEmail().notEmpty(),
     check('password', 'La contraseña es obligatoria').notEmpty(),
@@ -23,9 +23,9 @@ router.post(
   Controller.signup
 )
 
-router.get('/personal', Controller.findAll)
-router.get('/personal/:personal_id', Controller.findOne)
+router.get('', Controller.findAll)
+router.get('/:personal_id', Controller.findOne)
 
-router.put('/personal/:personal_id', Controller.edit)
+router.put('/:personal_id', Controller.edit)
 
 export default router
