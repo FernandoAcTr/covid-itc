@@ -1,6 +1,6 @@
 import { Carrera } from '../entities/carrera.entity'
 import { getRepository } from 'typeorm'
-import { ModalidadEnum, RolEnum } from '../entities'
+import { ModalidadEnum, RolEnum, AlertEnum } from '../entities'
 
 export async function existCarrer(carrera_id: any) {
   const carrera = await getRepository(Carrera).findOne(carrera_id)
@@ -27,4 +27,13 @@ export function validateRoles(roles: string[]) {
   }
 
   return true
+}
+
+export function validateAlertStatus(status: string) {
+  const enumValues = Object.values(AlertEnum)
+  if (enumValues.includes(status as AlertEnum)) return true
+
+  throw new Error(
+    'El status solamente puede tomar los valores: ' + enumValues.join(',')
+  )
 }

@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm'
 import { Usuario } from './usuario.entity'
 
@@ -20,7 +22,10 @@ export class Alerta {
   @Column({ type: 'text' })
   alerta: string
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.alertas, { cascade: true })
+  @ManyToOne(() => Usuario, (usuario) => usuario.alertas, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'usuario_id' })
   usuario: Usuario
 
@@ -30,4 +35,10 @@ export class Alerta {
     default: AlertEnum.PENDIENTE,
   })
   status: AlertEnum
+
+  @CreateDateColumn()
+  create_at: Date
+
+  @UpdateDateColumn()
+  update_at: Date
 }
