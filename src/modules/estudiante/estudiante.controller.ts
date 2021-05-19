@@ -8,7 +8,7 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
   const userRepository = getCustomRepository(UserRepository)
   const studentRepository = getCustomRepository(StudentRepository)
   try {
-    const saved = await studentRepository.storeStudent(req.body)
+    const saved = await studentRepository.store(req.body)
 
     const token = userRepository.createToken(saved.usuario)
     res.json({

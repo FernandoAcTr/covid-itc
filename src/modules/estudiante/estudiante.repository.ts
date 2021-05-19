@@ -7,7 +7,7 @@ import { ErrorHandler } from '../../middlewares/error_handler'
 
 @EntityRepository(Estudiante)
 export class StudentRepository extends AbstractRepository<Estudiante> {
-  async storeStudent(body: any) {
+  async store(body: any) {
     const { nombre, a_paterno, a_materno, carrera_id, email, password } = body
     const userRepository = this.manager.getCustomRepository(UserRepository)
 

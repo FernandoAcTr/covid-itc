@@ -1,16 +1,13 @@
 import { Request, Response, NextFunction } from 'express'
-import { getCustomRepository, getRepository, In } from 'typeorm'
+import { getCustomRepository } from 'typeorm'
 import { UserRepository } from './user.repository'
 import { ErrorHandler } from '../../middlewares/error_handler'
-import { Rol, Usuario } from '../../entities'
 
 export async function login(req: Request, res: Response, next: NextFunction) {
   const { email, password } = req.body
   const userRepository = getCustomRepository(UserRepository)
   try {
-    const user = await userRepository.findOne({
-      where: { email },
-    })
+    const user = await userRepository.findByEmail(email)
 
     if (!user) return next(new ErrorHandler(404, 'Credenciales invalidas'))
 
@@ -28,8 +25,10 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function findAll(req: Request, res: Response, next: NextFunction) {
+  const userRepository = getCustomRepository(UserRepository)
+
   try {
-    const usuarios = await getRepository(Usuario).find()
+    const usuarios = await userRepository.findAll()
     res.json(usuarios)
   } catch (error) {
     next(new ErrorHandler(500, error.message))
@@ -37,10 +36,10 @@ export async function findAll(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function findOne(req: Request, res: Response, next: NextFunction) {
+  const userRepository = getCustomRepository(UserRepository)
   try {
     const { usuario_id } = req.params
-    const usuario = await getRepository(Usuario).findOne(usuario_id)
-    if (!usuario) return next(new ErrorHandler(404, 'Usuario no encontrado'))
+    const usuario = await userRepository.findOne(usuario_id)
     res.json(usuario)
   } catch (error) {
     next(new ErrorHandler(500, error.message))
@@ -54,16 +53,10 @@ export async function disableUser(
   next: NextFunction
 ) {
   const { usuario_id } = req.params
+  const userRepository = getCustomRepository(UserRepository)
 
   try {
-    const usuario = await getRepository(Usuario).findOne(usuario_id)
-    if (!usuario)
-      return next(
-        new ErrorHandler(404, 'No existe un usuario con id' + usuario_id)
-      )
-
-    usuario.habilitado = false
-    const saved = await getRepository(Usuario).save(usuario)
+    const saved = await userRepository.update(usuario_id, { habilitado: false })
     res.json(saved)
   } catch (error) {
     next(new ErrorHandler(500, error.message))
@@ -75,31 +68,10 @@ export async function updateUser(
   res: Response,
   next: NextFunction
 ) {
-  const { email, password, habilitado, sospechoso, requireSurvey, roles } =
-    req.body
   const { usuario_id } = req.params
-
   const userRepository = getCustomRepository(UserRepository)
   try {
-    const user = await userRepository.findOneOrFail(usuario_id)
-    user.email = email || user.email
-    user.password =
-      password !== undefined
-        ? userRepository.encrypPassword(password)
-        : user.password
-    user.habilitado = habilitado !== undefined ? habilitado : user.habilitado
-    user.sospechoso = sospechoso !== undefined ? sospechoso : user.sospechoso
-    user.requireSuvey =
-      requireSurvey !== undefined ? requireSurvey : user.requireSuvey
-
-    //update roles
-    user.roles = roles
-      ? await getRepository(Rol).find({
-          where: { rol: In(roles) },
-        })
-      : user.roles
-
-    const saved = await userRepository.save(user)
+    const saved = await userRepository.update(usuario_id, req.body)
     res.json(saved)
   } catch (error) {
     next(new ErrorHandler(500, error.message))
