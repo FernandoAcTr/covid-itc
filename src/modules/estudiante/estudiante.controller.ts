@@ -1,49 +1,19 @@
 import { NextFunction, Request, Response } from 'express'
-import {
-  getCustomRepository,
-  getRepository,
-  createQueryBuilder,
-  In,
-} from 'typeorm'
-import { Carrera, Estudiante, Rol, RolEnum, Usuario } from '../../entities'
-import { requireSurvey } from '../../helpers/require_surver.helper'
+import { getCustomRepository } from 'typeorm'
 import { ErrorHandler } from '../../middlewares/error_handler'
 import { UserRepository } from '../user/user.repository'
+import { StudentRepository } from './estudiante.repository'
 
 export async function signup(req: Request, res: Response, next: NextFunction) {
-  const { nombre, a_paterno, a_materno, carrera_id, email, password } = req.body
   const userRepository = getCustomRepository(UserRepository)
-
+  const studentRepository = getCustomRepository(StudentRepository)
   try {
-    // Create user Role
-    const userRol = await getRepository(Rol).findOneOrFail({
-      where: { rol: In([RolEnum.ESTUDIANTE]) },
-    })
-
-    //create user
-    const usuario = new Usuario()
-    usuario.email = email
-    usuario.password = userRepository.encrypPassword(password)
-    usuario.roles = [userRol]
-    usuario.requireSuvey = await requireSurvey()
-
-    //find carrer
-    const carrera = await getRepository(Carrera).findOneOrFail(carrera_id)
-
-    //create student
-    const estudiante = new Estudiante()
-    estudiante.nombre = nombre
-    estudiante.a_materno = a_materno
-    estudiante.a_paterno = a_paterno
-    estudiante.usuario = usuario
-    estudiante.carrera = carrera
-
-    const saved = await getRepository(Estudiante).save(estudiante)
+    const saved = await studentRepository.storeStudent(req.body)
 
     const token = userRepository.createToken(saved.usuario)
     res.json({
       token,
-      estudiante,
+      estudiante: saved,
     })
   } catch (error) {
     next(new ErrorHandler(500, error.message))
@@ -53,15 +23,9 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
 //TODO hacer que solo el estudiante logueado o administrador puedan ver la informacion de este estudiante
 export async function findOne(req: Request, res: Response, next: NextFunction) {
   const { estudiante_id } = req.params
-
+  const studentRepository = getCustomRepository(StudentRepository)
   try {
-    const estudiante = await getRepository(Estudiante).findOne(estudiante_id, {
-      relations: ['usuario'],
-    })
-    if (!estudiante)
-      return next(
-        new ErrorHandler(404, 'No existe el estudiante con id ' + estudiante_id)
-      )
+    const estudiante = await studentRepository.findOne(estudiante_id)
 
     res.json(estudiante)
   } catch (error) {
@@ -71,36 +35,18 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
 
 //TODO proteger ruta por administrador
 export async function findAll(req: Request, res: Response, next: NextFunction) {
-  const estudiantes = await createQueryBuilder(Estudiante, 'e')
-    .leftJoinAndSelect('e.usuario', 'u')
-    .leftJoinAndSelect('e.carrera', 'c')
-    .leftJoinAndSelect('u.roles', 'r')
-    .getMany()
-
+  const studentRepository = getCustomRepository(StudentRepository)
+  const estudiantes = await studentRepository.findAll()
   res.json(estudiantes)
 }
 
 //TODO proteger ruta por administrador
 export async function edit(req: Request, res: Response, next: NextFunction) {
-  const { nombre, a_paterno, a_materno, carrera_id } = req.body
   const { estudiante_id } = req.params
+  const studentRepository = getCustomRepository(StudentRepository)
 
   try {
-    //find carrer
-    const carrera = await getRepository(Carrera).findOne({
-      where: { carrera_id },
-    })
-
-    //find student
-    const estudiante = await getRepository(Estudiante).findOneOrFail(
-      estudiante_id
-    )
-    estudiante.nombre = nombre || estudiante.nombre
-    estudiante.a_materno = a_materno || estudiante.a_materno
-    estudiante.a_paterno = a_paterno || estudiante.a_paterno
-    estudiante.carrera = carrera || estudiante.carrera
-
-    const saved = await getRepository(Estudiante).save(estudiante)
+    const saved = await studentRepository.update(estudiante_id, req.body)
     res.json(saved)
   } catch (error) {
     next(new ErrorHandler(500, error.message))
