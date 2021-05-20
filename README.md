@@ -9,7 +9,7 @@ Usar el instalador de paquetes de node [npm](https://www.npmjs.com/) para instal
 El API usa el motor de base de datos postgres. Usted debe crear una base de datos llamada covid19_itc en el servidor postgres.
 
 ```bash
-git clone repository_dir
+git clone git@github.com:FernandoAcTr/covid-itc.git
 cd covid_itc
 npm install
 ```
