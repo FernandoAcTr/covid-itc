@@ -6,7 +6,7 @@ Covid_ITC es un API REST desarrollado en TypeScript
 ## Instalacion
 
 Usar el instalador de paquetes de node [npm](https://www.npmjs.com/) para instalar este proyecto.
-El API usa el motor de base de datos mysql. Usted debe crear una base de datos llamada covid19_itc en el servidor mysql.
+El API usa el motor de base de datos postgres. Usted debe crear una base de datos llamada covid19_itc en el servidor postgres.
 
 ```bash
 git clone repository_dir
@@ -20,6 +20,12 @@ coincidan con su entorno de trabajo. Este archivo sirve solamente para desarroll
 
 ```bash
 npm run migrations:run
+```
+
+Adicionalmente, el proyecto da por hecho que su motor de base de datos tiene el modulo pgcrypto, que utiliza para generar campos uuid. Si no lo tiene puede agregarlo a su motor usando la siguiente sentencia como administrador, dentro de su motor de base de datos postgres. 
+
+```
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 ```
 
 ## License

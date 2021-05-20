@@ -53,7 +53,7 @@ export class PersonalRepository extends AbstractRepository<Personal> {
     const personal = await this.manager
       .createQueryBuilder(Personal, 'p')
       .leftJoinAndSelect('p.usuario', 'u')
-      .leftJoinAndSelect('p.departamento', 'c')
+      .leftJoinAndSelect('p.departamento', 'd')
       .leftJoinAndSelect('u.roles', 'r')
       .getMany()
 

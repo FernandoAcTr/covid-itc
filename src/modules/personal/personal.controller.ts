@@ -23,7 +23,7 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
 
 export async function findAll(req: Request, res: Response, next: NextFunction) {
   const personalRepository = getCustomRepository(PersonalRepository)
-  const personal = personalRepository.findAll()
+  const personal = await personalRepository.findAll()
 
   res.json(personal)
 }

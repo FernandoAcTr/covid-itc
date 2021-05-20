@@ -3,7 +3,7 @@ import { settings } from '../config/settings'
 const { DB } = settings
 
 createConnection({
-  type: 'mysql',
+  type: 'postgres',
   host: DB.HOST,
   port: Number(DB.PORT),
   username: DB.USER,
@@ -14,6 +14,6 @@ createConnection({
   entities: ['build/entities/*.entity.js'],
 })
   .then(() => {
-    console.log('Mysql conection is online...')
+    console.log('Postgres conection is online...')
   })
   .catch(console.log)
