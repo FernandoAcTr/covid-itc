@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
 import { UserRepository } from '../user/user.repository'
-import { ErrorHandler } from '../../middlewares/error_handler'
 import { PersonalRepository } from './personal.repisotry'
 
 export async function signup(req: Request, res: Response, next: NextFunction) {
@@ -17,7 +16,7 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
       saved,
     })
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }
 
@@ -36,7 +35,7 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
     const personal = await personalRepository.findOne(personal_id)
     res.json(personal)
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }
 
@@ -48,6 +47,6 @@ export async function edit(req: Request, res: Response, next: NextFunction) {
     const saved = await personalRepository.edit(personal_id, req.body)
     res.json(saved)
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }

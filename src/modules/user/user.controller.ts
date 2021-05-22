@@ -20,7 +20,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     const token = userRepository.createToken(user!)
     res.json({ token, usuario: user })
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }
 
@@ -31,7 +31,7 @@ export async function findAll(req: Request, res: Response, next: NextFunction) {
     const usuarios = await userRepository.findAll()
     res.json(usuarios)
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }
 
@@ -42,7 +42,7 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
     const usuario = await userRepository.findOne(usuario_id)
     res.json(usuario)
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }
 
@@ -59,7 +59,7 @@ export async function disableUser(
     const saved = await userRepository.update(usuario_id, { habilitado: false })
     res.json(saved)
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }
 
@@ -74,6 +74,6 @@ export async function updateUser(
     const saved = await userRepository.update(usuario_id, req.body)
     res.json(saved)
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }

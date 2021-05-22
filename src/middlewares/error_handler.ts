@@ -12,12 +12,14 @@ export class ErrorHandler extends Error {
 }
 
 export const handleErrorMiddleware = (
-  err: ErrorHandler,
+  err: any,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { statusCode, message } = err
+  let statusCode, message
+  statusCode = err instanceof ErrorHandler ? err.statusCode : 500
+  message = err.message
   res.status(statusCode).json({
     statusCode,
     message,

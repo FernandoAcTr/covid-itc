@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-import { ErrorHandler } from '../../middlewares/error_handler'
 import { getCustomRepository } from 'typeorm'
 import { ModalidadEncuestaRepository } from './modalidad_encuesta.repository'
 import { EncuestaRepository } from './encuesta.repository'
@@ -18,7 +17,7 @@ export async function changeModality(
 
     res.json(modality)
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }
 
@@ -33,7 +32,7 @@ export async function getModality(
     ).getModality()
     res.json(modalidad)
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }
 
@@ -48,7 +47,7 @@ export async function getPreguntas(
     ).getPreguntas()
     res.json(preguntas)
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }
 
@@ -65,7 +64,7 @@ export async function createEncuesta(
 
     res.json(encuesta)
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }
 
@@ -78,7 +77,7 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
 
     res.json(encuesta)
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }
 
@@ -96,7 +95,7 @@ export async function findAllByUserId(
 
     res.json(encuestas)
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }
 
@@ -106,6 +105,6 @@ export async function findAll(req: Request, res: Response, next: NextFunction) {
 
     res.json(encuestas)
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }

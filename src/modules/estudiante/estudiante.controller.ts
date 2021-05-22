@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
-import { ErrorHandler } from '../../middlewares/error_handler'
 import { UserRepository } from '../user/user.repository'
 import { StudentRepository } from './estudiante.repository'
 
@@ -16,7 +15,7 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
       estudiante: saved,
     })
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }
 
@@ -29,7 +28,7 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
 
     res.json(estudiante)
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }
 
@@ -49,7 +48,7 @@ export async function edit(req: Request, res: Response, next: NextFunction) {
     const saved = await studentRepository.update(estudiante_id, req.body)
     res.json(saved)
   } catch (error) {
-    next(new ErrorHandler(500, error.message))
+    next(error)
   }
 }
 
