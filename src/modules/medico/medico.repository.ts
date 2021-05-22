@@ -21,7 +21,7 @@ export class MedicoRepository extends AbstractRepository<Medico> {
     usuario.email = email
     usuario.password = userRepository.encrypPassword(password)
     usuario.roles = [userRol]
-    usuario.requireSuvey = false
+    usuario.requireSurvey = false
 
     //create medico
     const medico = new Medico()

@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { ErrorHandler } from '../../middlewares/error_handler'
-import { ModalidadEnum, ModalidadEncuesta } from '../../entities'
-import { getConnection, getRepository } from 'typeorm'
+import { getCustomRepository } from 'typeorm'
+import { ModalidadEncuestaRepository } from './modalidad_encuesta.repository'
+import { EncuestaRepository } from './encuesta.repository'
 
 export async function changeModality(
   req: Request,
@@ -11,25 +12,11 @@ export async function changeModality(
   const { modalidad } = req.body
 
   try {
-    const newModalidad = new ModalidadEncuesta()
-    newModalidad.modalidad = modalidad
-    const saved = await getRepository(ModalidadEncuesta).save(newModalidad)
+    const modality = await getCustomRepository(
+      ModalidadEncuestaRepository
+    ).setModality(modalidad)
 
-    await getConnection().query('update usuario set requireSuvey=false')
-
-    const sql = {
-      [ModalidadEnum.ALEATORIA]:
-        'update usuario set requireSuvey=true where rand() > 0.5',
-      [ModalidadEnum.OBLIGATORIA]: 'update usuario set requireSuvey=true',
-      [ModalidadEnum.VOLUNTARIA]: 'update usuario set requireSuvey=false',
-    }
-
-    const query = sql[modalidad as ModalidadEnum]
-    await getConnection().query(query)
-
-    res.json({
-      modalidad: saved,
-    })
+    res.json(modality)
   } catch (error) {
     next(new ErrorHandler(500, error.message))
   }
@@ -41,18 +28,83 @@ export async function getModality(
   next: NextFunction
 ) {
   try {
-    const modalidad = await getRepository(ModalidadEncuesta).find({
-      order: { id: 'DESC' },
-      take: 1,
-    })
-    if (modalidad.length > 0) {
-      res.json({ modalidad: modalidad[0] })
-    } else {
-      const modalidad = new ModalidadEncuesta()
-      modalidad.modalidad = ModalidadEnum.VOLUNTARIA
-      const saved = await getRepository(ModalidadEncuesta).save(modalidad)
-      res.json({ modalidad: saved })
-    }
+    const modalidad = await getCustomRepository(
+      ModalidadEncuestaRepository
+    ).getModality()
+    res.json(modalidad)
+  } catch (error) {
+    next(new ErrorHandler(500, error.message))
+  }
+}
+
+export async function getPreguntas(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const preguntas = await getCustomRepository(
+      EncuestaRepository
+    ).getPreguntas()
+    res.json(preguntas)
+  } catch (error) {
+    next(new ErrorHandler(500, error.message))
+  }
+}
+
+export async function createEncuesta(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const encuesta = await getCustomRepository(
+      EncuestaRepository
+    ).createEncuesta(req.body)
+    console.log(encuesta)
+
+    res.json(encuesta)
+  } catch (error) {
+    next(new ErrorHandler(500, error.message))
+  }
+}
+
+export async function findOne(req: Request, res: Response, next: NextFunction) {
+  const { encuesta_id } = req.params
+  try {
+    const encuesta = await getCustomRepository(EncuestaRepository).findOne(
+      Number(encuesta_id)
+    )
+
+    res.json(encuesta)
+  } catch (error) {
+    next(new ErrorHandler(500, error.message))
+  }
+}
+
+export async function findAllByUserId(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { usuario_id } = req.params
+
+  try {
+    const encuestas = await getCustomRepository(
+      EncuestaRepository
+    ).findAllByUserId(usuario_id)
+
+    res.json(encuestas)
+  } catch (error) {
+    next(new ErrorHandler(500, error.message))
+  }
+}
+
+export async function findAll(req: Request, res: Response, next: NextFunction) {
+  try {
+    const encuestas = await getCustomRepository(EncuestaRepository).findAll()
+
+    res.json(encuestas)
   } catch (error) {
     next(new ErrorHandler(500, error.message))
   }

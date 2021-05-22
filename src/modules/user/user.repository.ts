@@ -47,8 +47,8 @@ export class UserRepository extends AbstractRepository<Usuario> {
       password !== undefined ? this.encrypPassword(password) : user.password
     user.habilitado = habilitado !== undefined ? habilitado : user.habilitado
     user.sospechoso = sospechoso !== undefined ? sospechoso : user.sospechoso
-    user.requireSuvey =
-      requireSurvey !== undefined ? requireSurvey : user.requireSuvey
+    user.requireSurvey =
+      requireSurvey !== undefined ? requireSurvey : user.requireSurvey
 
     //update roles
     user.roles = roles

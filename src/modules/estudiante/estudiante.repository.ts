@@ -21,7 +21,7 @@ export class StudentRepository extends AbstractRepository<Estudiante> {
     usuario.email = email
     usuario.password = userRepository.encrypPassword(password)
     usuario.roles = [userRol]
-    usuario.requireSuvey = await requireSurvey()
+    usuario.requireSurvey = await requireSurvey()
 
     //find carrer
     const carrera = await this.manager

@@ -8,6 +8,7 @@ import {
 } from 'typeorm'
 import { Alerta } from './alerta.entity'
 import { Rol } from './rol.entity'
+import { Encuesta } from './encuesta.entity'
 
 @Entity()
 export class Usuario {
@@ -28,8 +29,8 @@ export class Usuario {
   @Column({ default: false })
   sospechoso: Boolean
 
-  @Column()
-  requireSuvey: Boolean
+  @Column({ name: 'require_survey' })
+  requireSurvey: Boolean
 
   @OneToMany(() => Alerta, (alerta) => alerta.usuario)
   alertas: Alerta[]
@@ -41,4 +42,12 @@ export class Usuario {
     inverseJoinColumn: { name: 'rol_id', referencedColumnName: 'rol_id' },
   })
   roles: Rol[]
+
+  @OneToMany(() => Encuesta, (encuesta) => encuesta.usuario)
+  encuestas: Encuesta[]
+
+  toJSON() {
+    const { password, ...other } = this
+    return other
+  }
 }

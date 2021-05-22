@@ -4,7 +4,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { ModalidadEnum } from './encuesta.entity'
+
+export enum ModalidadEnum {
+  OBLIGATORIA = 'obligatoria',
+  VOLUNTARIA = 'voluntaria',
+  ALEATORIA = 'aleatoria',
+}
 
 @Entity()
 export class ModalidadEncuesta {

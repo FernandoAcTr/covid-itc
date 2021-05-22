@@ -1,6 +1,7 @@
 import { Carrera } from '../entities/carrera.entity'
 import { getRepository } from 'typeorm'
 import { ModalidadEnum, RolEnum, AlertEnum } from '../entities'
+import { RespuestaEnum } from '../entities/respuesta.entity'
 
 export async function existCarrer(carrera_id: any) {
   const carrera = await getRepository(Carrera).findOne(carrera_id)
@@ -36,4 +37,13 @@ export function validateAlertStatus(status: string) {
   throw new Error(
     'El status solamente puede tomar los valores: ' + enumValues.join(',')
   )
+}
+
+export function validateRespuestas(respuestas: Array<string>) {
+  const resValues = Object.values(RespuestaEnum)
+  respuestas.forEach((res) => {
+    if (!resValues.includes(res as RespuestaEnum))
+      throw new Error('Las respuestas solo pueden ser: ' + resValues.join(','))
+  })
+  return true
 }

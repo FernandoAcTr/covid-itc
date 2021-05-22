@@ -30,7 +30,7 @@ export class PersonalRepository extends AbstractRepository<Personal> {
     usuario.email = email
     usuario.password = userRepository.encrypPassword(password)
     usuario.roles = [userRol]
-    usuario.requireSuvey = await requireSurvey()
+    usuario.requireSurvey = await requireSurvey()
 
     //find department
     const departamento = await this.manager
