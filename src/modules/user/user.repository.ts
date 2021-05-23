@@ -24,6 +24,7 @@ export class UserRepository extends AbstractRepository<Usuario> {
   async findOne(usuario_id: string) {
     const usuario = await this.repository.findOne({
       where: { usuario_id: usuario_id },
+      relations: ['estudiante', 'personal', 'medico'],
     })
     if (!usuario) throw new ErrorHandler(404, 'Usuario no encontrado')
     return usuario
@@ -34,7 +35,9 @@ export class UserRepository extends AbstractRepository<Usuario> {
   }
 
   async findAll() {
-    return await this.repository.find()
+    return await this.repository.find({
+      relations: ['estudiante', 'personal', 'medico'],
+    })
   }
 
   async update(usuario_id: string, body: any) {

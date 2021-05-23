@@ -4,12 +4,16 @@ import {
   JoinTable,
   ManyToMany,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { Alerta } from './alerta.entity'
 import { Rol } from './rol.entity'
 import { Encuesta } from './encuesta.entity'
 import { OrdenDePrueba } from './orden_de_prueba.entity'
+import { Estudiante } from './estudiante.entity'
+import { Personal } from './personal.entity'
+import { Medico } from './medico.entity'
 
 @Entity()
 export class Usuario {
@@ -50,8 +54,20 @@ export class Usuario {
   @OneToMany(() => OrdenDePrueba, (orden) => orden.usuario)
   ordenes: OrdenDePrueba[]
 
+  @OneToOne(() => Estudiante, (estudiante) => estudiante.usuario)
+  estudiante: Estudiante
+
+  @OneToOne(() => Personal, (personal) => personal.usuario)
+  personal: Personal
+
+  @OneToOne(() => Medico, (medico) => medico.usuario)
+  medico: Medico
+
   toJSON() {
-    const { password, ...other } = this
+    const { password, ...other } = this as any
+    if (other.estudiante === null) delete other.estudiante
+    if (other.personal === null) delete other.personal
+    if (other.medico === null) delete other.medico
     return other
   }
 }
