@@ -22,15 +22,32 @@ export class OrdenDePrueba {
   @Column({ type: 'enum', enum: ResultadoEnum, nullable: true })
   resultado: ResultadoEnum
 
-  @ManyToOne(() => Usuario, { cascade: true })
+  @ManyToOne(() => Usuario, (usuario) => usuario.ordenes, {
+    eager: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'usuario_id' })
   usuario: Usuario
 
-  @ManyToOne(() => Medico)
+  @ManyToOne(() => Medico, {
+    eager: true,
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'medico_id' })
   medico: Medico
 
   @ManyToOne(() => TipoPrueba, { eager: true })
   @JoinColumn({ name: 'tipo_id' })
   tipo: TipoPrueba
+
+  toJSON() {
+    let orden: any = this
+    delete orden.usuario.roles
+    delete orden.usuario.habilitado
+    delete orden.usuario.sospechoso
+    delete orden.usuario.requireSurvey
+    return orden
+  }
 }

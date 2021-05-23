@@ -1,6 +1,6 @@
 import { Carrera } from '../entities/carrera.entity'
 import { getRepository } from 'typeorm'
-import { ModalidadEnum, RolEnum, AlertEnum } from '../entities'
+import { ModalidadEnum, RolEnum, AlertEnum, ResultadoEnum } from '../entities'
 import { RespuestaEnum } from '../entities/respuesta.entity'
 
 export async function existCarrer(carrera_id: any) {
@@ -46,4 +46,13 @@ export function validateRespuestas(respuestas: Array<string>) {
       throw new Error('Las respuestas solo pueden ser: ' + resValues.join(','))
   })
   return true
+}
+
+export function validateOrderResult(resultado: string) {
+  const enumValues = Object.values(ResultadoEnum)
+  if (enumValues.includes(resultado as ResultadoEnum)) return true
+
+  throw new Error(
+    'El resultado solamente puede tomar los valores: ' + enumValues.join(',')
+  )
 }

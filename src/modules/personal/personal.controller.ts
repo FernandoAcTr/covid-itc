@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
 import { UserRepository } from '../user/user.repository'
-import { PersonalRepository } from './personal.repisotry'
+import { PersonalRepository } from './personal.repository'
 
 export async function signup(req: Request, res: Response, next: NextFunction) {
   const userRepository = getCustomRepository(UserRepository)

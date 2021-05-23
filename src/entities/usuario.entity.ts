@@ -9,6 +9,7 @@ import {
 import { Alerta } from './alerta.entity'
 import { Rol } from './rol.entity'
 import { Encuesta } from './encuesta.entity'
+import { OrdenDePrueba } from './orden_de_prueba.entity'
 
 @Entity()
 export class Usuario {
@@ -45,6 +46,9 @@ export class Usuario {
 
   @OneToMany(() => Encuesta, (encuesta) => encuesta.usuario)
   encuestas: Encuesta[]
+
+  @OneToMany(() => OrdenDePrueba, (orden) => orden.usuario)
+  ordenes: OrdenDePrueba[]
 
   toJSON() {
     const { password, ...other } = this
