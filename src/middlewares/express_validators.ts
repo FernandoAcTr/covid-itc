@@ -1,7 +1,14 @@
 import { Carrera } from '../entities/carrera.entity'
 import { getRepository } from 'typeorm'
-import { ModalidadEnum, RolEnum, AlertEnum, ResultadoEnum } from '../entities'
-import { RespuestaEnum } from '../entities/respuesta.entity'
+import {
+  ModalidadEnum,
+  RolEnum,
+  AlertEnum,
+  ResultadoEnum,
+  RespuestaEnum,
+  ModalidadConsultaEnum,
+  StatusEnum,
+} from '../entities'
 
 export async function existCarrer(carrera_id: any) {
   const carrera = await getRepository(Carrera).findOne(carrera_id)
@@ -54,5 +61,23 @@ export function validateOrderResult(resultado: string) {
 
   throw new Error(
     'El resultado solamente puede tomar los valores: ' + enumValues.join(',')
+  )
+}
+
+export function validateModalidadConsulta(modalidad: string) {
+  const enumValues = Object.values(ModalidadConsultaEnum)
+  if (enumValues.includes(modalidad as ModalidadConsultaEnum)) return true
+  throw new Error(
+    'La modalidad de la consulta solamente puede tomar los valores: ' +
+      enumValues.join(',')
+  )
+}
+
+export function validateConsultaStatus(status: string) {
+  const enumValues = Object.values(StatusEnum)
+  if (enumValues.includes(status as StatusEnum)) return true
+  throw new Error(
+    'El status de la consulta solamente puede tomar los valores: ' +
+      enumValues.join(',')
   )
 }

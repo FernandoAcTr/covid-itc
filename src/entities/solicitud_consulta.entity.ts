@@ -14,7 +14,7 @@ import { Multimedia } from './multimedia.entity'
 
 export enum ModalidadConsultaEnum {
   VIRTUAL = 'virtual',
-  PRESCENCIAL = 'prescencial',
+  PRESCENCIAL = 'presencial',
 }
 
 export enum StatusEnum {
@@ -39,13 +39,18 @@ export class SolicitudConsulta {
   @Column({ type: 'text', nullable: true })
   receta: string
 
-  @ManyToOne(() => Usuario)
+  @ManyToOne(() => Usuario, (usuario) => usuario.consultas, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+    eager: true,
+  })
   @JoinColumn({ name: 'usuario_id' })
   usuario: Usuario
 
   @ManyToOne(() => Medico, {
+    eager: true,
     nullable: true,
-    onDelete: 'NO ACTION',
+    onDelete: 'SET NULL',
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'medico_id' })
@@ -57,7 +62,7 @@ export class SolicitudConsulta {
   @Column({ nullable: true })
   fecha_atencion: Date
 
-  @ManyToMany(() => Multimedia)
+  @ManyToMany(() => Multimedia, { cascade: true, eager: true })
   @JoinTable({
     name: 'solicitud_multimedia',
     joinColumn: {
@@ -70,4 +75,11 @@ export class SolicitudConsulta {
     },
   })
   evidencias: Multimedia[]
+
+  toJSON() {
+    let solicitud: any = this
+    delete solicitud.usuario?.roles
+    delete solicitud.usuario?.habilitado
+    return solicitud
+  }
 }

@@ -14,6 +14,7 @@ import { OrdenDePrueba } from './orden_de_prueba.entity'
 import { Estudiante } from './estudiante.entity'
 import { Personal } from './personal.entity'
 import { Medico } from './medico.entity'
+import { SolicitudConsulta } from './solicitud_consulta.entity'
 
 @Entity()
 export class Usuario {
@@ -53,6 +54,9 @@ export class Usuario {
 
   @OneToMany(() => OrdenDePrueba, (orden) => orden.usuario)
   ordenes: OrdenDePrueba[]
+
+  @OneToMany(() => SolicitudConsulta, (solicitud) => solicitud.usuario)
+  consultas: SolicitudConsulta[]
 
   @OneToOne(() => Estudiante, (estudiante) => estudiante.usuario)
   estudiante: Estudiante
