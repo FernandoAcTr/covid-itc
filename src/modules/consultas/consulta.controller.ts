@@ -10,7 +10,7 @@ export async function createConsulta(
   try {
     const solicitud = await getCustomRepository(
       ConsultaRepository
-    ).createSolicitud(req.body)
+    ).createSolicitud(req.body, (req.files as any)['evidencias'])
     res.json(solicitud)
   } catch (error) {
     next(error)
@@ -35,20 +35,15 @@ export async function updateConsulta(
 
 export async function findAll(req: Request, res: Response, next: NextFunction) {
   const atendidas = req.query.atendidas
-  console.log(atendidas)
-
+  const consultaRepository = getCustomRepository(ConsultaRepository)
   try {
     let solicitudes
     if (atendidas === undefined)
-      solicitudes = await getCustomRepository(ConsultaRepository).findAll()
+      solicitudes = await consultaRepository.findAll()
     else if (Number(atendidas))
-      solicitudes = await getCustomRepository(
-        ConsultaRepository
-      ).findAtendidas()
+      solicitudes = await consultaRepository.findAtendidas()
     else if (!Number(atendidas))
-      solicitudes = await getCustomRepository(
-        ConsultaRepository
-      ).findPendientes()
+      solicitudes = await consultaRepository.findPendientes()
 
     res.json(solicitudes)
   } catch (error) {

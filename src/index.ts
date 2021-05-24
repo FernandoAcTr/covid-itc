@@ -4,6 +4,7 @@ import cors from 'cors'
 import helmet from 'helmet'
 import { rateLimiterMiddleware } from './middlewares/rate_limiter'
 import { handleErrorMiddleware } from './middlewares/error_handler'
+import multer from "./config/multer";
 
 //importin routes
 import routes from './router'
@@ -31,6 +32,7 @@ class Server {
     this.app.use(cors())
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: false }))
+    this.app.use(multer)
   }
 
   routes() {

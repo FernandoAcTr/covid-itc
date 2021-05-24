@@ -6,5 +6,8 @@ export class Multimedia {
   multimedia_id: string
 
   @Column()
+  public_id: string
+
+  @Column()
   url: string
 }

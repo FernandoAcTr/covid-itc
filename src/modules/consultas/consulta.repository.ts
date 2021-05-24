@@ -1,10 +1,17 @@
 import { AbstractRepository, EntityRepository } from 'typeorm'
-import { Medico, SolicitudConsulta, StatusEnum, Usuario } from '../../entities'
+import {
+  Medico,
+  Multimedia,
+  SolicitudConsulta,
+  StatusEnum,
+  Usuario,
+} from '../../entities'
 import { ErrorHandler } from '../../middlewares/error_handler'
+import { uploadFile, deleteFiles } from '../../helpers/file_storage'
 
 @EntityRepository(SolicitudConsulta)
 export class ConsultaRepository extends AbstractRepository<SolicitudConsulta> {
-  async createSolicitud(body: any) {
+  async createSolicitud(body: any, files: Express.Multer.File[]) {
     const { usuario_id, sintomas, modalidad } = body
 
     const usuario = await this.manager
@@ -15,6 +22,20 @@ export class ConsultaRepository extends AbstractRepository<SolicitudConsulta> {
     solicitud.usuario = usuario
     solicitud.sintomas = sintomas
     solicitud.modalidad = modalidad
+
+    const evidencias: Multimedia[] = []
+    if (files)
+      for (const file of files) {
+        const evidencia = new Multimedia()
+        const result = await uploadFile(file)
+        if (result) {
+          evidencia.url = result.url
+          evidencia.public_id = result.public_id
+          evidencias.push(evidencia)
+        }
+      }
+
+    solicitud.evidencias = evidencias
 
     return await this.repository.save(solicitud)
   }
@@ -68,6 +89,7 @@ export class ConsultaRepository extends AbstractRepository<SolicitudConsulta> {
     })
     if (solicitud.status === StatusEnum.ATENDIDA)
       throw new ErrorHandler(403, 'Una cosulta atendida no puede ser eliminada')
+    deleteFiles(solicitud.evidencias)
     return await this.repository.remove(solicitud)
   }
 }
