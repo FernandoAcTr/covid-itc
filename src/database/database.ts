@@ -1,6 +1,9 @@
 import { createConnection } from 'typeorm'
 import { settings } from '../config/settings'
+import { readFileSync } from 'fs'
 const { DB } = settings
+
+console.log(process.env.CA);
 
 createConnection({
   type: 'postgres',
@@ -11,6 +14,10 @@ createConnection({
   database: DB.NAME,
   synchronize: false,
   logging: false,
+  ssl: {
+    rejectUnauthorized: true,
+    ca: readFileSync('ca-certificate.crt').toString(),
+  },
   entities: ['build/entities/*.entity.js'],
 })
   .then(() => {
