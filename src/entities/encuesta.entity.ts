@@ -10,7 +10,7 @@ import { Usuario } from './usuario.entity'
 import { Respuesta } from './respuesta.entity'
 import { OneToMany } from 'typeorm'
 
-@Entity()
+@Entity({ orderBy: { fecha_aplicacion: 'DESC' } })
 export class Encuesta {
   @PrimaryGeneratedColumn()
   encuesta_id: number
@@ -30,7 +30,6 @@ export class Encuesta {
 
   @OneToMany(() => Respuesta, (respuesta) => respuesta.encuesta, {
     cascade: true,
-    eager: true,
   })
   respuestas: Respuesta[]
 

@@ -100,8 +100,17 @@ export async function findAllByUserId(
 }
 
 export async function findAll(req: Request, res: Response, next: NextFunction) {
+  const symtopms = req.query.sintomas
   try {
-    const encuestas = await getCustomRepository(EncuestaRepository).findAll()
+    let encuestas = null
+
+    if (symtopms === undefined) {
+      encuestas = await getCustomRepository(EncuestaRepository).findAll()
+    } else if (Number(symtopms)) {
+      encuestas = await getCustomRepository(
+        EncuestaRepository
+      ).findAllWithSymtoms()
+    }
 
     res.json(encuestas)
   } catch (error) {

@@ -17,6 +17,8 @@ export const handleErrorMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
+  console.log(err)
+
   let statusCode, message
   statusCode = err instanceof ErrorHandler ? err.statusCode : 500
   message = err.message

@@ -1,5 +1,11 @@
 import { AbstractRepository, EntityRepository } from 'typeorm'
-import { Encuesta, Pregunta, Respuesta, Usuario } from '../../entities'
+import {
+  Encuesta,
+  Pregunta,
+  Respuesta,
+  Usuario,
+  RespuestaEnum,
+} from '../../entities'
 import { ErrorHandler } from '../../middlewares/error_handler'
 
 @EntityRepository(Encuesta)
@@ -11,6 +17,7 @@ export class EncuestaRepository extends AbstractRepository<Encuesta> {
     const usuario = await this.manager
       .getRepository(Usuario)
       .findOneOrFail({ where: { usuario_id } })
+    usuario.requireSurvey = false
 
     //create encuesta
     const encuesta = new Encuesta()
@@ -40,13 +47,17 @@ export class EncuestaRepository extends AbstractRepository<Encuesta> {
     encuesta.otros_sintomas = otros_sintomas
     encuesta.usuario = usuario
 
-    return await this.repository.save(encuesta)
+    const result = await this.manager.transaction(async (entityManager) => {
+      await entityManager.save(usuario)
+      return await entityManager.save(encuesta)
+    })
+    return result
   }
 
   async findOne(encuesta_id: number) {
     const encuesta = await this.repository.findOneOrFail({
       where: { encuesta_id },
-      relations: ['usuario'],
+      relations: ['usuario', 'respuestas'],
     })
     return encuesta
   }
@@ -64,8 +75,27 @@ export class EncuestaRepository extends AbstractRepository<Encuesta> {
   }
 
   async findAll() {
-    return await this.manager
+    const encuestas = await this.manager
       .getRepository(Encuesta)
       .find({ relations: ['usuario'] })
+
+    return encuestas
+  }
+
+  async findAllWithSymtoms() {
+    const result = await this.manager
+      .getRepository(Encuesta)
+      .find({ relations: ['usuario', 'respuestas'] })
+
+    const encuestas: Encuesta[] = []
+
+    result.map((e) => {
+      if (e.respuestas.some((s) => s.respuesta === RespuestaEnum.SI)) {
+        delete (e as any).respuestas
+        encuestas.push(e)
+      }
+    })
+
+    return encuestas
   }
 }
