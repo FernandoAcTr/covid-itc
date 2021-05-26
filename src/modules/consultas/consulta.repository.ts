@@ -7,7 +7,7 @@ import {
   Usuario,
 } from '../../entities'
 import { ErrorHandler } from '../../middlewares/error_handler'
-import { uploadFile, deleteFiles } from '../../helpers/file_storage'
+import { deleteFiles } from '../../helpers/file_storage'
 
 @EntityRepository(SolicitudConsulta)
 export class ConsultaRepository extends AbstractRepository<SolicitudConsulta> {
@@ -27,15 +27,14 @@ export class ConsultaRepository extends AbstractRepository<SolicitudConsulta> {
     if (files)
       for (const file of files) {
         const evidencia = new Multimedia()
-        const result = await uploadFile(file)
-        if (result) {
-          evidencia.url = result.url
-          evidencia.public_id = result.public_id
-          evidencias.push(evidencia)
-        }
+        evidencia.url = (file as any).location
+        evidencia.public_id = (file as any).key
+        evidencias.push(evidencia)
       }
 
     solicitud.evidencias = evidencias
+
+    console.log(files)
 
     return await this.repository.save(solicitud)
   }

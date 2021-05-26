@@ -3,8 +3,6 @@ import { settings } from '../config/settings'
 import { readFileSync } from 'fs'
 const { DB } = settings
 
-console.log(process.env.CA);
-
 createConnection({
   type: 'postgres',
   host: DB.HOST,

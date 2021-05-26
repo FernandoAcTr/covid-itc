@@ -10,10 +10,10 @@ export const settings = {
     PORT: process.env.DB_PORT,
     NAME: process.env.DB_NAME,
   },
-  CLOUDINARY: {
-    API_KEY: process.env.CLOUDDINARY_API_KEY,
-    API_SECRET: process.env.CLOUDDINARY_API_SECRET,
-    CLOUD_NAME: process.env.CLOUDINARY_NAME,
-    PLACEHOLDER_IMAGE: process.env.PLACEHOLDER_IMAGE,
+  AWS: {
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    S3_ENDPOINT: process.env.S3_ENDPOINT,
+    BUCKET_NAME: process.env.BUCKET_NAME,
   },
 }
