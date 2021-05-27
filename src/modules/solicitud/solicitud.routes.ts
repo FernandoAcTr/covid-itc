@@ -1,12 +1,12 @@
 import { Router } from 'express'
-import * as Controller from './consulta.controller'
+import * as Controller from './solicitud.controller'
 import { check } from 'express-validator'
 import {
   validateModalidadConsulta,
   validateConsultaStatus,
   validateBody,
   verifyRoles,
-} from '../../middlewares/'
+} from '../../middlewares'
 import passport from '../../libs/passport'
 import { RolEnum } from '../../entities'
 
@@ -58,7 +58,11 @@ router.get(
   Controller.findByUser
 )
 
-//TODO obtener todas las consultas por medico
+router.get(
+  '/medico/:medico_id',
+  verifyRoles(RolEnum.MEDICO, RolEnum.MONITOR),
+  Controller.findByMedico
+)
 
 router.delete(
   '/:solicitud_id',

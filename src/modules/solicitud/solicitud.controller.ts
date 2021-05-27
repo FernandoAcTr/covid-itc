@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
-import { ConsultaRepository } from './consulta.repository'
+import { SolicitudConsultaRepository } from './solicitud.repository'
 
 export async function createConsulta(
   req: Request,
@@ -9,7 +9,7 @@ export async function createConsulta(
 ) {
   try {
     const solicitud = await getCustomRepository(
-      ConsultaRepository
+      SolicitudConsultaRepository
     ).createSolicitud(req.body, (req.files as any)['evidencias'])
     res.json(solicitud)
   } catch (error) {
@@ -23,7 +23,7 @@ export async function updateConsulta(
   next: NextFunction
 ) {
   try {
-    const solicitud = await getCustomRepository(ConsultaRepository).update(
+    const solicitud = await getCustomRepository(SolicitudConsultaRepository).update(
       req.params.solicitud_id,
       req.body
     )
@@ -35,7 +35,7 @@ export async function updateConsulta(
 
 export async function findAll(req: Request, res: Response, next: NextFunction) {
   const atendidas = req.query.atendidas
-  const consultaRepository = getCustomRepository(ConsultaRepository)
+  const consultaRepository = getCustomRepository(SolicitudConsultaRepository)
   try {
     let solicitudes
     if (atendidas === undefined)
@@ -58,8 +58,23 @@ export async function findByUser(
 ) {
   try {
     const solicitudes = await getCustomRepository(
-      ConsultaRepository
+      SolicitudConsultaRepository
     ).findByUser(req.params.usuario_id)
+    res.json(solicitudes)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function findByMedico(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const solicitudes = await getCustomRepository(
+      SolicitudConsultaRepository
+    ).findByMedico(req.params.medico_id)
     res.json(solicitudes)
   } catch (error) {
     next(error)
@@ -72,7 +87,7 @@ export async function deleteConsulta(
   next: NextFunction
 ) {
   try {
-    const solicitud = await getCustomRepository(ConsultaRepository).delete(
+    const solicitud = await getCustomRepository(SolicitudConsultaRepository).delete(
       req.params.solicitud_id
     )
     res.json(solicitud)

@@ -7,7 +7,7 @@ import { ErrorHandler } from '../../middlewares/error_handler'
 import { Rol } from '../../entities'
 
 @EntityRepository(Usuario)
-export class UserRepository extends AbstractRepository<Usuario> {
+export class UsuarioRepository extends AbstractRepository<Usuario> {
   encrypPassword(password: string) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10))
   }
@@ -31,7 +31,10 @@ export class UserRepository extends AbstractRepository<Usuario> {
   }
 
   async findByEmail(email: string) {
-    return await this.repository.findOne({ where: { email } })
+    return await this.repository.findOne({
+      where: { email },
+      relations: ['estudiante', 'personal', 'medico'],
+    })
   }
 
   async findAll() {

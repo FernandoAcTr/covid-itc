@@ -1,6 +1,6 @@
 import { In } from 'typeorm'
 import { Medico, Rol, RolEnum } from '../../entities'
-import { UserRepository } from '../user/user.repository'
+import { UsuarioRepository } from '../usuario/usuario'
 import { Usuario } from '../../entities/usuario.entity'
 import { ErrorHandler } from '../../middlewares/error_handler'
 import { EntityRepository, AbstractRepository } from 'typeorm'
@@ -9,7 +9,7 @@ import { EntityRepository, AbstractRepository } from 'typeorm'
 export class MedicoRepository extends AbstractRepository<Medico> {
   async store(body: any) {
     const { nombre, a_paterno, a_materno, rfc, cedula, email, password } = body
-    const userRepository = this.manager.getCustomRepository(UserRepository)
+    const userRepository = this.manager.getCustomRepository(UsuarioRepository)
 
     // Create user Role
     const userRol = await this.manager.getRepository(Rol).findOneOrFail({

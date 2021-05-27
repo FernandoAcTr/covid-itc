@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
-import { UserRepository } from '../user/user.repository'
+import { UsuarioRepository } from '../usuario/usuario'
 import { StudentRepository } from './estudiante.repository'
 
 export async function signup(req: Request, res: Response, next: NextFunction) {
-  const userRepository = getCustomRepository(UserRepository)
+  const userRepository = getCustomRepository(UsuarioRepository)
   const studentRepository = getCustomRepository(StudentRepository)
   try {
     const saved = await studentRepository.store(req.body)

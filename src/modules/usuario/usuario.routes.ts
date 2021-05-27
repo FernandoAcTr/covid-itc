@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import * as Controller from './user.controller'
+import * as Controller from './usuario.controller'
 import { check } from 'express-validator'
 import {
   validateBody,

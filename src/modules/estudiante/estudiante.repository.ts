@@ -1,7 +1,7 @@
 import { AbstractRepository, In } from 'typeorm'
 import { Carrera, Estudiante, Rol, RolEnum, Usuario } from '../../entities'
 import { requireSurvey } from '../../helpers/require_surver.helper'
-import { UserRepository } from '../user/user.repository'
+import { UsuarioRepository } from '../usuario/usuario'
 import { EntityRepository } from 'typeorm'
 import { ErrorHandler } from '../../middlewares/error_handler'
 
@@ -9,7 +9,7 @@ import { ErrorHandler } from '../../middlewares/error_handler'
 export class StudentRepository extends AbstractRepository<Estudiante> {
   async store(body: any) {
     const { nombre, a_paterno, a_materno, carrera_id, email, password } = body
-    const userRepository = this.manager.getCustomRepository(UserRepository)
+    const userRepository = this.manager.getCustomRepository(UsuarioRepository)
 
     // Create user Role
     const userRol = await this.manager.getRepository(Rol).findOneOrFail({

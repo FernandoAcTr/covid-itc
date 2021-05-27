@@ -10,7 +10,7 @@ import { ErrorHandler } from '../../middlewares/error_handler'
 import { deleteFiles } from '../../helpers/file_storage'
 
 @EntityRepository(SolicitudConsulta)
-export class ConsultaRepository extends AbstractRepository<SolicitudConsulta> {
+export class SolicitudConsultaRepository extends AbstractRepository<SolicitudConsulta> {
   async createSolicitud(body: any, files: Express.Multer.File[]) {
     const { usuario_id, sintomas, modalidad } = body
 
@@ -80,6 +80,13 @@ export class ConsultaRepository extends AbstractRepository<SolicitudConsulta> {
       .getRepository(Usuario)
       .findOneOrFail({ where: { usuario_id }, relations: ['consultas'] })
     return usuario.consultas
+  }
+
+  async findByMedico(medico_id: string) {
+    const medico = await this.manager
+      .getRepository(Medico)
+      .findOneOrFail({ where: { medico_id }, relations: ['consultas'] })
+    return medico.consultas
   }
 
   async delete(solicitud_id: string) {

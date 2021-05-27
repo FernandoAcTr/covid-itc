@@ -1,13 +1,15 @@
 import { Request, Response, NextFunction } from 'express'
 import { getCustomRepository } from 'typeorm'
-import { UserRepository } from './user.repository'
+import { UsuarioRepository } from './usuario'
 import { ErrorHandler } from '../../middlewares/error_handler'
 
 export async function login(req: Request, res: Response, next: NextFunction) {
   const { email, password } = req.body
-  const userRepository = getCustomRepository(UserRepository)
+  const userRepository = getCustomRepository(UsuarioRepository)
   try {
     const user = await userRepository.findByEmail(email)
+
+    console.log(user)
 
     if (!user) return next(new ErrorHandler(404, 'Credenciales invalidas'))
 
@@ -25,7 +27,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function findAll(req: Request, res: Response, next: NextFunction) {
-  const userRepository = getCustomRepository(UserRepository)
+  const userRepository = getCustomRepository(UsuarioRepository)
 
   try {
     const usuarios = await userRepository.findAll()
@@ -36,7 +38,7 @@ export async function findAll(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function findOne(req: Request, res: Response, next: NextFunction) {
-  const userRepository = getCustomRepository(UserRepository)
+  const userRepository = getCustomRepository(UsuarioRepository)
   try {
     const { usuario_id } = req.params
     const usuario = await userRepository.findOne(usuario_id)
@@ -52,7 +54,7 @@ export async function disableUser(
   next: NextFunction
 ) {
   const { usuario_id } = req.params
-  const userRepository = getCustomRepository(UserRepository)
+  const userRepository = getCustomRepository(UsuarioRepository)
 
   try {
     const saved = await userRepository.update(usuario_id, { habilitado: false })
@@ -68,7 +70,7 @@ export async function updateUser(
   next: NextFunction
 ) {
   const { usuario_id } = req.params
-  const userRepository = getCustomRepository(UserRepository)
+  const userRepository = getCustomRepository(UsuarioRepository)
   try {
     const saved = await userRepository.update(usuario_id, req.body)
     res.json(saved)

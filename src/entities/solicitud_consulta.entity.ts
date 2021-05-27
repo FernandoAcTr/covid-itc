@@ -47,7 +47,7 @@ export class SolicitudConsulta {
   @JoinColumn({ name: 'usuario_id' })
   usuario: Usuario
 
-  @ManyToOne(() => Medico, {
+  @ManyToOne(() => Medico, (medico) => medico.consultas, {
     eager: true,
     nullable: true,
     onDelete: 'SET NULL',

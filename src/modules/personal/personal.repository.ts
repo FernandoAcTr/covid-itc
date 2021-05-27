@@ -2,7 +2,7 @@ import { AbstractRepository, EntityRepository } from 'typeorm'
 import { In } from 'typeorm'
 import { Departamento, Personal, Rol, RolEnum, Usuario } from '../../entities'
 import { requireSurvey } from '../../helpers/require_surver.helper'
-import { UserRepository } from '../user/user.repository'
+import { UsuarioRepository } from '../usuario/usuario'
 import { ErrorHandler } from '../../middlewares/error_handler'
 
 @EntityRepository(Personal)
@@ -18,7 +18,7 @@ export class PersonalRepository extends AbstractRepository<Personal> {
       password,
     } = body
 
-    const userRepository = this.manager.getCustomRepository(UserRepository)
+    const userRepository = this.manager.getCustomRepository(UsuarioRepository)
 
     // Create user Role
     const userRol = await this.manager.getRepository(Rol).findOneOrFail({
