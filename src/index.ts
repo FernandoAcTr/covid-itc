@@ -2,9 +2,9 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 import helmet from 'helmet'
-import { rateLimiterMiddleware } from './middlewares/rate_limiter'
-import { handleErrorMiddleware } from './middlewares/error_handler'
-import multer from "./config/multer";
+import { rateLimiterMiddleware, handleErrorMiddleware } from './middlewares'
+import multer from './libs/multer'
+import passport from './libs/passport'
 
 //importin routes
 import routes from './router'
@@ -33,6 +33,7 @@ class Server {
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: false }))
     this.app.use(multer)
+    this.app.use(passport.initialize())
   }
 
   routes() {

@@ -1,6 +1,6 @@
 import { Multimedia } from '../entities'
 
-import { s3 } from '../config/multer'
+import { s3 } from '../libs/multer'
 import { settings } from '../config/settings'
 
 export async function deleteFile(file: Multimedia) {

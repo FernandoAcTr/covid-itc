@@ -46,7 +46,6 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-//TODO proteger ruta por administrador
 export async function disableUser(
   req: Request,
   res: Response,

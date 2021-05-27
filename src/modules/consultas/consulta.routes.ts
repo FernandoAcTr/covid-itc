@@ -1,16 +1,24 @@
 import { Router } from 'express'
 import * as Controller from './consulta.controller'
 import { check } from 'express-validator'
-import { validateBody } from '../../middlewares/validate_body'
 import {
   validateModalidadConsulta,
   validateConsultaStatus,
-} from '../../middlewares/express_validators'
+  validateBody,
+  verifyRoles,
+} from '../../middlewares/'
+import passport from '../../libs/passport'
+import { RolEnum } from '../../entities'
 
 const router = Router()
 
+// ---------------------- Auth -------------------------------------
+router.use(passport.authenticate('jwt', { session: false }))
+
+// --------------------- Consultas ---------------------------------
 router.post(
   '/',
+  verifyRoles(RolEnum.ESTUDIANTE, RolEnum.PERSONAL),
   [
     check('usuario_id', 'El campo usuario_id es obligatorio').notEmpty(),
     check('sintomas', 'El campo sintomas es obligatorio').notEmpty(),
@@ -24,6 +32,7 @@ router.post(
 
 router.put(
   '/:solicitud_id',
+  verifyRoles(RolEnum.MEDICO),
   [
     check('modalidad').optional().custom(validateModalidadConsulta),
     check('status').optional().custom(validateConsultaStatus),
@@ -32,8 +41,29 @@ router.put(
   Controller.updateConsulta
 )
 
-router.get('/', Controller.findAll)
-router.get('/usuario/:usuario_id', Controller.findByUser)
-router.delete('/:solicitud_id', Controller.deleteConsulta)
+router.get(
+  '/',
+  verifyRoles(RolEnum.MEDICO, RolEnum.MONITOR),
+  Controller.findAll
+)
+
+router.get(
+  '/usuario/:usuario_id',
+  verifyRoles(
+    RolEnum.MEDICO,
+    RolEnum.MONITOR,
+    RolEnum.ESTUDIANTE,
+    RolEnum.PERSONAL
+  ),
+  Controller.findByUser
+)
+
+//TODO obtener todas las consultas por medico
+
+router.delete(
+  '/:solicitud_id',
+  verifyRoles(RolEnum.MEDICO),
+  Controller.deleteConsulta
+)
 
 export default router

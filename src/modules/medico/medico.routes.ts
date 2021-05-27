@@ -1,12 +1,17 @@
 import { Router } from 'express'
 import * as Controller from './medico.controller'
 import { check } from 'express-validator'
-import { validateBody } from '../../middlewares/validate_body'
+import { validateBody, verifyRoles, RolEnum } from '../../middlewares'
+import passport from '../../libs/passport'
 
 const router = Router()
 
+// ---------------------- Auth -------------------------------------
+router.use(passport.authenticate('jwt', { session: false }))
+
 router.post(
   '/signup',
+  verifyRoles(RolEnum.ADMINISTRADOR),
   [
     check('email', 'El campo email no es un email valido').isEmail().notEmpty(),
     check('password', 'La contraseña es obligatoria').notEmpty(),
@@ -19,7 +24,16 @@ router.post(
   ],
   Controller.signup
 )
-router.get('/', Controller.findAll)
-router.get('/:medico_id', Controller.findOne)
-router.put('/:medico_id', Controller.edit)
+
+router.get('/', verifyRoles(RolEnum.ADMINISTRADOR), Controller.findAll)
+router.get(
+  '/:medico_id',
+  verifyRoles(RolEnum.ADMINISTRADOR, RolEnum.MEDICO),
+  Controller.findOne
+)
+router.put(
+  '/:medico_id',
+  verifyRoles(RolEnum.ADMINISTRADOR, RolEnum.MEDICO),
+  Controller.edit
+)
 export default router

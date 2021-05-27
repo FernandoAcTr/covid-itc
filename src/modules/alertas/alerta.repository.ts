@@ -1,5 +1,5 @@
 import { AbstractRepository, EntityRepository } from 'typeorm'
-import { Alerta } from '../../entities'
+import { Alerta, AlertEnum } from '../../entities'
 import { Usuario } from '../../entities/usuario.entity'
 import { ErrorHandler } from '../../middlewares/error_handler'
 
@@ -41,6 +41,11 @@ export class AlertaRepository extends AbstractRepository<Alerta> {
   async updateAlert(alerta_id: string, body: any) {
     const { alerta, status } = body
     const alert = await this.repository.findOneOrFail({ where: { alerta_id } })
+    if (alert.status === AlertEnum.LEIDA)
+      throw new ErrorHandler(
+        403,
+        'No es posible actualizar una alerta que ya ha sido leida'
+      )
     alert.alerta = alerta || alert.alerta
     alert.status = status || alert.status
     return await this.repository.save(alert)

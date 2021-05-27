@@ -1,27 +1,59 @@
 import { Router } from 'express'
 import * as Controller from './ordenes.controller'
 import { check } from 'express-validator'
-import { validateBody } from '../../middlewares/validate_body'
-import { validateOrderResult } from '../../middlewares/express_validators'
+import {
+  validateBody,
+  validateOrderResult,
+  verifyRoles,
+  RolEnum,
+} from '../../middlewares/'
+import passport from '../../libs/passport'
 
 const router = Router()
 
+// ---------------------- Auth -------------------------------------
+router.use(passport.authenticate('jwt', { session: false }))
+
 router.post(
   '/',
+  verifyRoles(RolEnum.MEDICO),
   [
     check('usuario_id', 'El campo usuario_id es obligatorio').notEmpty(),
     check('medico_id', 'El campo medico_id es obligatorio').notEmpty(),
     check('tipo_id', 'El campo tipo_id es obligatorio').notEmpty(),
     validateBody,
   ],
-  Controller.createorden
+  Controller.createOrden
 )
 
-router.get('/', Controller.findAll)
-router.get('/:orden_id', Controller.findOne)
-router.get('/usuario/:usuario_id', Controller.findByUser)
+router.get(
+  '/',
+  verifyRoles(RolEnum.MEDICO, RolEnum.MONITOR),
+  Controller.findAll
+)
+router.get(
+  '/:orden_id',
+  verifyRoles(
+    RolEnum.MEDICO,
+    RolEnum.MONITOR,
+    RolEnum.PERSONAL,
+    RolEnum.ESTUDIANTE
+  ),
+  Controller.findOne
+)
+router.get(
+  '/usuario/:usuario_id',
+  verifyRoles(
+    RolEnum.MEDICO,
+    RolEnum.MONITOR,
+    RolEnum.PERSONAL,
+    RolEnum.ESTUDIANTE
+  ),
+  Controller.findByUser
+)
 router.put(
   '/:orden_id',
+  verifyRoles(RolEnum.MEDICO),
   [check('resultado').custom(validateOrderResult), validateBody],
   Controller.update
 )

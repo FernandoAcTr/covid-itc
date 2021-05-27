@@ -1,8 +1,13 @@
 import { Router } from 'express'
 import * as Controller from './user.controller'
 import { check } from 'express-validator'
-import { validateBody } from '../../middlewares/validate_body'
-import { validateRoles } from '../../middlewares/express_validators'
+import {
+  validateBody,
+  validateRoles,
+  RolEnum,
+  verifyRoles,
+} from '../../middlewares'
+import passport from '../../libs/passport'
 
 const router = Router()
 
@@ -16,10 +21,17 @@ router.post(
   Controller.login
 )
 
-router.get('', Controller.findAll)
+// ---------------------- Auth -------------------------------------
+router.use(passport.authenticate('jwt', { session: false }))
+
+router.get('/', verifyRoles(RolEnum.ADMINISTRADOR), Controller.findAll)
 router.get('/:usuario_id', Controller.findOne)
 
-router.delete('/:usuario_id', Controller.disableUser)
+router.delete(
+  '/:usuario_id',
+  verifyRoles(RolEnum.ADMINISTRADOR),
+  Controller.disableUser
+)
 
 router.put(
   '/:usuario_id',

@@ -4,22 +4,36 @@ import * as Controller from './encuesta.controller'
 import {
   validateModality,
   validateRespuestas,
-} from '../../middlewares/express_validators'
-import { validateBody } from '../../middlewares/validate_body'
+  validateBody,
+  verifyRoles,
+  RolEnum,
+} from '../../middlewares/'
+import passport from '../../libs/passport'
 
 const router = Router()
 
-router.get('/modalidad', Controller.getModality)
+// ---------------------- Auth -------------------------------------
+router.use(passport.authenticate('jwt', { session: false }))
+
+// ---------------------- Define Modality --------------------------
+router.get(
+  '/modalidad',
+  verifyRoles(RolEnum.MEDICO, RolEnum.MONITOR),
+  Controller.getModality
+)
 router.post(
   '/modalidad',
+  verifyRoles(RolEnum.MEDICO),
   [check('modalidad').custom(validateModality), validateBody],
   Controller.changeModality
 )
 
+// ---------------------- Answer questionary -------------------------
 router.get('/preguntas', Controller.getPreguntas)
 
 router.post(
   '/',
+  verifyRoles(RolEnum.ESTUDIANTE, RolEnum.PERSONAL),
   [
     check('usuario_id', 'El campo usuario_id es obligatorio').notEmpty(),
     check('otros_sintomas', 'El campo otros_sintomas es obligatorio')
@@ -36,8 +50,31 @@ router.post(
   Controller.createEncuesta
 )
 
-router.get('/:encuesta_id', Controller.findOne)
-router.get('/usuario/:usuario_id', Controller.findAllByUserId)
-router.get('/', Controller.findAll)
+router.get(
+  '/:encuesta_id',
+  verifyRoles(
+    RolEnum.ESTUDIANTE,
+    RolEnum.PERSONAL,
+    RolEnum.MEDICO,
+    RolEnum.MONITOR
+  ),
+  Controller.findOne
+)
+
+router.get(
+  '/usuario/:usuario_id',
+  verifyRoles(
+    RolEnum.ESTUDIANTE,
+    RolEnum.PERSONAL,
+    RolEnum.MEDICO,
+    RolEnum.MONITOR
+  ),
+  Controller.findAllByUserId
+)
+router.get(
+  '/',
+  verifyRoles(RolEnum.MEDICO, RolEnum.MONITOR),
+  Controller.findAll
+)
 
 export default router

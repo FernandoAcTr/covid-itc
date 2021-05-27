@@ -1,8 +1,13 @@
 import { Router } from 'express'
 import * as Controller from './estudiante.controller'
 import { check } from 'express-validator'
-import { existCarrer } from '../../middlewares/express_validators'
-import { validateBody } from '../../middlewares/validate_body'
+import {
+  existCarrer,
+  validateBody,
+  verifyRoles,
+  RolEnum,
+} from '../../middlewares'
+import passport from '../../libs/passport'
 
 const router = Router()
 
@@ -22,8 +27,19 @@ router.post(
   Controller.signup
 )
 
-router.get('/', Controller.findAll)
-router.get('/:estudiante_id', Controller.findOne)
-router.put('/:estudiante_id', Controller.edit)
+// ---------------------- Auth -------------------------------------
+router.use(passport.authenticate('jwt', { session: false }))
+
+router.get('/', verifyRoles(RolEnum.ADMINISTRADOR), Controller.findAll)
+router.get(
+  '/:estudiante_id',
+  verifyRoles(RolEnum.ESTUDIANTE, RolEnum.ADMINISTRADOR),
+  Controller.findOne
+)
+router.put(
+  '/:estudiante_id',
+  verifyRoles(RolEnum.ESTUDIANTE, RolEnum.ADMINISTRADOR),
+  Controller.edit
+)
 
 export default router

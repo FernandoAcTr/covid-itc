@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
 import { OrdenRepository } from './ordenes.repository'
 
-export async function createorden(
+export async function createOrden(
   req: Request,
   res: Response,
   next: NextFunction
