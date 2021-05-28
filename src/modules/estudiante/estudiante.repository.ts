@@ -1,7 +1,7 @@
 import { AbstractRepository, In } from 'typeorm'
 import { Carrera, Estudiante, Rol, RolEnum, Usuario } from '../../entities'
 import { requireSurvey } from '../../helpers/require_surver.helper'
-import { UsuarioRepository } from '../usuario/usuario'
+import { UsuarioRepository } from '../usuario/usuario.repository'
 import { EntityRepository } from 'typeorm'
 import { ErrorHandler } from '../../middlewares/error_handler'
 

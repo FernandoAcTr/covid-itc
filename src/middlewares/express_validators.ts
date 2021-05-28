@@ -7,7 +7,7 @@ import {
   ResultadoEnum,
   RespuestaEnum,
   ModalidadConsultaEnum,
-  StatusEnum,
+  SolicitudStatusEnum,
 } from '../entities'
 
 export async function existCarrer(carrera_id: any) {
@@ -74,8 +74,8 @@ export function validateModalidadConsulta(modalidad: string) {
 }
 
 export function validateConsultaStatus(status: string) {
-  const enumValues = Object.values(StatusEnum)
-  if (enumValues.includes(status as StatusEnum)) return true
+  const enumValues = Object.values(SolicitudStatusEnum)
+  if (enumValues.includes(status as SolicitudStatusEnum)) return true
   throw new Error(
     'El status de la consulta solamente puede tomar los valores: ' +
       enumValues.join(',')

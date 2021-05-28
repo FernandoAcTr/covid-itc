@@ -6,6 +6,7 @@ import {
   validateConsultaStatus,
   validateBody,
   verifyRoles,
+  verifyResourceReceta,
 } from '../../middlewares'
 import passport from '../../libs/passport'
 import { RolEnum } from '../../entities'
@@ -68,6 +69,13 @@ router.delete(
   '/:solicitud_id',
   verifyRoles(RolEnum.MEDICO),
   Controller.deleteConsulta
+)
+
+router.get(
+  '/receta/:solicitud_id',
+  verifyRoles(RolEnum.MEDICO, RolEnum.ESTUDIANTE, RolEnum.PERSONAL),
+  verifyResourceReceta,
+  Controller.getReceta
 )
 
 export default router

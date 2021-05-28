@@ -1,6 +1,6 @@
 import { In } from 'typeorm'
 import { Medico, Rol, RolEnum } from '../../entities'
-import { UsuarioRepository } from '../usuario/usuario'
+import { UsuarioRepository } from '../usuario/usuario.repository'
 import { Usuario } from '../../entities/usuario.entity'
 import { ErrorHandler } from '../../middlewares/error_handler'
 import { EntityRepository, AbstractRepository } from 'typeorm'

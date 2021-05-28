@@ -2,7 +2,7 @@ import { AbstractRepository, EntityRepository } from 'typeorm'
 import { In } from 'typeorm'
 import { Departamento, Personal, Rol, RolEnum, Usuario } from '../../entities'
 import { requireSurvey } from '../../helpers/require_surver.helper'
-import { UsuarioRepository } from '../usuario/usuario'
+import { UsuarioRepository } from '../usuario/usuario.repository'
 import { ErrorHandler } from '../../middlewares/error_handler'
 
 @EntityRepository(Personal)
