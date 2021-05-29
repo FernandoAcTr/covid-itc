@@ -22,6 +22,9 @@ export class OrdenDePrueba {
   @Column({ type: 'enum', enum: ResultadoEnum, nullable: true })
   resultado: ResultadoEnum
 
+  @Column({ nullable: true })
+  fecha_deteccion: Date
+
   @ManyToOne(() => Usuario, (usuario) => usuario.ordenes, {
     eager: true,
     onDelete: 'CASCADE',
