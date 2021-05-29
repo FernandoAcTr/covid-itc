@@ -1,4 +1,4 @@
-import { In } from 'typeorm'
+import { Equal } from 'typeorm'
 import { Medico, Rol, RolEnum } from '../../entities'
 import { UsuarioRepository } from '../usuario/usuario.repository'
 import { Usuario } from '../../entities/usuario.entity'
@@ -13,14 +13,14 @@ export class MedicoRepository extends AbstractRepository<Medico> {
 
     // Create user Role
     const userRol = await this.manager.getRepository(Rol).findOneOrFail({
-      where: { rol: In([RolEnum.MEDICO]) },
+      where: { rol: Equal(RolEnum.MEDICO) },
     })
 
     //create user
     const usuario = new Usuario()
     usuario.email = email
     usuario.password = userRepository.encrypPassword(password)
-    usuario.roles = [userRol]
+    usuario.rol = userRol
     usuario.requireSurvey = false
 
     //create medico
@@ -49,7 +49,7 @@ export class MedicoRepository extends AbstractRepository<Medico> {
     const medicos = await this.manager
       .createQueryBuilder(Medico, 'm')
       .leftJoinAndSelect('m.usuario', 'u')
-      .leftJoinAndSelect('u.roles', 'r')
+      .leftJoinAndSelect('u.rol', 'r')
       .getMany()
 
     return medicos

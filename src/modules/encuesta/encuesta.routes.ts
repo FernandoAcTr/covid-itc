@@ -5,7 +5,7 @@ import {
   validateModality,
   validateRespuestas,
   validateBody,
-  verifyRoles,
+  verifyRol,
   RolEnum,
 } from '../../middlewares/'
 import passport from '../../libs/passport'
@@ -18,12 +18,12 @@ router.use(passport.authenticate('jwt', { session: false }))
 // ---------------------- Define Modality --------------------------
 router.get(
   '/modalidad',
-  verifyRoles(RolEnum.MEDICO, RolEnum.MONITOR),
+  verifyRol(RolEnum.MEDICO, RolEnum.MONITOR),
   Controller.getModality
 )
 router.post(
   '/modalidad',
-  verifyRoles(RolEnum.MEDICO),
+  verifyRol(RolEnum.MEDICO),
   [check('modalidad').custom(validateModality), validateBody],
   Controller.changeModality
 )
@@ -33,7 +33,7 @@ router.get('/preguntas', Controller.getPreguntas)
 
 router.post(
   '/',
-  verifyRoles(RolEnum.ESTUDIANTE, RolEnum.PERSONAL),
+  verifyRol(RolEnum.ESTUDIANTE, RolEnum.PERSONAL),
   [
     check('usuario_id', 'El campo usuario_id es obligatorio').notEmpty(),
     check('otros_sintomas', 'El campo otros_sintomas es obligatorio')
@@ -52,7 +52,7 @@ router.post(
 
 router.get(
   '/:encuesta_id',
-  verifyRoles(
+  verifyRol(
     RolEnum.ESTUDIANTE,
     RolEnum.PERSONAL,
     RolEnum.MEDICO,
@@ -63,7 +63,7 @@ router.get(
 
 router.get(
   '/usuario/:usuario_id',
-  verifyRoles(
+  verifyRol(
     RolEnum.ESTUDIANTE,
     RolEnum.PERSONAL,
     RolEnum.MEDICO,
@@ -73,7 +73,7 @@ router.get(
 )
 router.get(
   '/',
-  verifyRoles(RolEnum.MEDICO, RolEnum.MONITOR),
+  verifyRol(RolEnum.MEDICO, RolEnum.MONITOR),
   Controller.findAll
 )
 

@@ -4,7 +4,7 @@ import { check } from 'express-validator'
 import {
   validateBody,
   validateAlertStatus,
-  verifyRoles,
+  verifyRol,
   RolEnum,
 } from '../../middlewares'
 import passport from '../../libs/passport'
@@ -17,7 +17,7 @@ router.use(passport.authenticate('jwt', { session: false }))
 // ---------------------- Alerts -------------------------------------
 router.post(
   '/',
-  verifyRoles(RolEnum.MEDICO, RolEnum.MONITOR),
+  verifyRol(RolEnum.MEDICO, RolEnum.MONITOR),
   [
     check('usuario_id', 'El campo usuario_id es obligatorio').notEmpty(),
     check('alerta', 'El campo alerta es obligatorio').notEmpty(),
@@ -27,19 +27,19 @@ router.post(
 )
 router.put(
   '/:alerta_id',
-  verifyRoles(RolEnum.MEDICO, RolEnum.MONITOR),
+  verifyRol(RolEnum.MEDICO, RolEnum.MONITOR),
   [check('status').optional().custom(validateAlertStatus), validateBody],
   AlertaController.update
 )
 router.delete(
   '/:alerta_id',
-  verifyRoles(RolEnum.MEDICO, RolEnum.MONITOR),
+  verifyRol(RolEnum.MEDICO, RolEnum.MONITOR),
   AlertaController.delete
 )
 
 router.get(
   '/usuario/:usuario_id',
-  verifyRoles(
+  verifyRol(
     RolEnum.MEDICO,
     RolEnum.MONITOR,
     RolEnum.ESTUDIANTE,
@@ -49,7 +49,7 @@ router.get(
 )
 router.put(
   '/read/:alerta_id',
-  verifyRoles(RolEnum.ESTUDIANTE, RolEnum.PERSONAL),
+  verifyRol(RolEnum.ESTUDIANTE, RolEnum.PERSONAL),
   AlertaController.read
 )
 

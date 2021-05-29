@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 export { RolEnum } from '../entities/rol.entity'
 
 //TODO descomentar validacion de roles
-export function verifyRoles(...roles: Array<string>) {
+export function verifyRol(...roles: Array<string>) {
   return (req: Request, res: Response, next: NextFunction) => {
     // const userRoles = req.user?.roles
 

@@ -23,15 +23,13 @@ export function validateModality(modalidad: string) {
   )
 }
 
-export function validateRoles(roles: string[]) {
+export function validateRol(rol: string) {
   const enumValues = Object.values(RolEnum)
 
-  for (const rol of roles) {
-    if (!enumValues.includes(rol as RolEnum)) {
-      throw new Error(
-        'Los roles solamente puede tomar los valores: ' + enumValues.join(',')
-      )
-    }
+  if (!enumValues.includes(rol as RolEnum)) {
+    throw new Error(
+      'El rol solamente puede tomar los valores: ' + enumValues.join(',')
+    )
   }
 
   return true

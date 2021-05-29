@@ -18,7 +18,7 @@ export async function verifyResourceReceta(
   if (
     !solicitud ||
     solicitud.usuario.usuario_id === user?.usuario_id ||
-    user?.roles.some((rol) => rol.rol === RolEnum.MEDICO)
+    user?.rol.rol === RolEnum.MEDICO
   ) {
     return next()
   }

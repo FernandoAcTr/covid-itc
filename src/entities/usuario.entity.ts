@@ -1,8 +1,7 @@
 import {
   Column,
   Entity,
-  JoinTable,
-  ManyToMany,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -15,6 +14,7 @@ import { Estudiante } from './estudiante.entity'
 import { Personal } from './personal.entity'
 import { Medico } from './medico.entity'
 import { SolicitudConsulta } from './solicitud_consulta.entity'
+import { JoinColumn } from 'typeorm'
 
 @Entity()
 export class Usuario {
@@ -41,13 +41,15 @@ export class Usuario {
   @OneToMany(() => Alerta, (alerta) => alerta.usuario)
   alertas: Alerta[]
 
-  @ManyToMany(() => Rol, { eager: true })
-  @JoinTable({
-    name: 'usuario_rol',
-    joinColumn: { name: 'usuario_id', referencedColumnName: 'usuario_id' },
-    inverseJoinColumn: { name: 'rol_id', referencedColumnName: 'rol_id' },
+  @ManyToOne(() => Rol, {
+    eager: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
   })
-  roles: Rol[]
+  @JoinColumn({
+    name: 'rol_id',
+  })
+  rol: Rol
 
   @OneToMany(() => Encuesta, (encuesta) => encuesta.usuario)
   encuestas: Encuesta[]

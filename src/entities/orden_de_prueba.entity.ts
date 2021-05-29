@@ -47,7 +47,7 @@ export class OrdenDePrueba {
 
   toJSON() {
     let orden: any = this
-    delete orden.usuario.roles
+    delete orden.usuario.rol
     delete orden.usuario.habilitado
     delete orden.usuario.sospechoso
     delete orden.usuario.requireSurvey

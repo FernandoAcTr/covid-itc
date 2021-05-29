@@ -1,4 +1,4 @@
-import { AbstractRepository, In } from 'typeorm'
+import { AbstractRepository, Equal } from 'typeorm'
 import { Carrera, Estudiante, Rol, RolEnum, Usuario } from '../../entities'
 import { requireSurvey } from '../../helpers/require_surver.helper'
 import { UsuarioRepository } from '../usuario/usuario.repository'
@@ -13,14 +13,16 @@ export class StudentRepository extends AbstractRepository<Estudiante> {
 
     // Create user Role
     const userRol = await this.manager.getRepository(Rol).findOneOrFail({
-      where: { rol: In([RolEnum.ESTUDIANTE]) },
+      where: { rol: Equal(RolEnum.ESTUDIANTE) },
     })
+
+    console.log(userRol)
 
     //create user
     const usuario = new Usuario()
     usuario.email = email
     usuario.password = userRepository.encrypPassword(password)
-    usuario.roles = [userRol]
+    usuario.rol = userRol
     usuario.requireSurvey = await requireSurvey()
 
     //find carrer
@@ -58,7 +60,7 @@ export class StudentRepository extends AbstractRepository<Estudiante> {
       .createQueryBuilder(Estudiante, 'e')
       .leftJoinAndSelect('e.usuario', 'u')
       .leftJoinAndSelect('e.carrera', 'c')
-      .leftJoinAndSelect('u.roles', 'r')
+      .leftJoinAndSelect('u.rol', 'r')
       .getMany()
 
     return estudiantes

@@ -78,7 +78,7 @@ export class SolicitudConsulta {
 
   toJSON() {
     let solicitud: any = this
-    delete solicitud.usuario?.roles
+    delete solicitud.usuario?.rol
     delete solicitud.usuario?.habilitado
     return solicitud
   }

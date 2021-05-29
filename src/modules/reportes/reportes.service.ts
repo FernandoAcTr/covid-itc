@@ -62,7 +62,7 @@ export class ReportesService {
     const total_departamento: any[] = await conn.query(
       `select d.departamento, count(*) as total_personal
       from usuario u
-        join personal p on p.usuario_id = p.usuario_id
+        join personal p on p.usuario_id = u.usuario_id
         join orden_de_prueba op on op.usuario_id = u.usuario_id
         join departamento d on d.departamento_id = p.departamento_id
       where op.resultado = 'POSITIVO'
