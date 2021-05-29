@@ -15,6 +15,24 @@ export async function getCasosDetectados(
   }
 }
 
+export async function getCasosDetectadosPDF(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const reportesService = new ReportesService()
+    const pdf = await reportesService.getCasosDetectadosPDF()
+    pdf.toStream((err, stream) => {
+      if (err) return next(err)
+      res.setHeader('Content-type', 'application/pdf')
+      stream.pipe(res)
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export async function getTotalCasos(
   req: Request,
   res: Response,

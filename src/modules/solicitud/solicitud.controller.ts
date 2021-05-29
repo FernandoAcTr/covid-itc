@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
-import { compile } from '../../helpers/compile_hbs'
 import { SolicitudConsultaRepository } from './solicitud.repository'
-import pdf from 'html-pdf'
 
 export async function createConsulta(
   req: Request,
@@ -107,7 +105,7 @@ export async function getReceta(
       SolicitudConsultaRepository
     ).createReceta(req.params.solicitud_id)
     pdf.toStream((err, stream) => {
-      if (err) return res.end(err.stack)
+      if (err) return next(err)
       res.setHeader('Content-type', 'application/pdf')
       stream.pipe(res)
     })

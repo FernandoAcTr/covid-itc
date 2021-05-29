@@ -1,11 +1,13 @@
 import { getConnection } from 'typeorm'
 import { Carrera, Departamento } from '../../entities'
+import { compile } from '../../helpers/compile_hbs'
+import pdf from 'html-pdf'
 
 export class ReportesService {
   async getCasosDetectados() {
     const conn = getConnection()
     const estudiantes = await conn.query(
-      `select concat_ws(' ',e.nombre,e.a_paterno,e.a_materno) as estudiante,
+      `select concat_ws(' ',e.nombre,e.a_paterno,e.a_materno) as nombre,
       	op.fecha_deteccion,
       	op.resultado,
       	c.carrera
@@ -17,7 +19,7 @@ export class ReportesService {
     )
 
     const personal = await conn.query(
-      `select concat_ws(' ',p.nombre,p.a_paterno,p.a_materno) as personal,
+      `select concat_ws(' ',p.nombre,p.a_paterno,p.a_materno) as nombre,
         op.fecha_deteccion,
         op.resultado,
         d.departamento
@@ -139,4 +141,26 @@ export class ReportesService {
     )
     return { consultas }
   }
+
+  async getCasosDetectadosPDF(): Promise<pdf.CreateResult> {
+    const data = await this.getCasosDetectados()
+    const html = compile('casos_detectados.hbs', data)
+    return createPDFReport(html)
+  }
+}
+
+const createPDFReport = (html: string) => {
+  return pdf.create(html, {
+    format: 'A4',
+    orientation: 'landscape',
+    border: { left: '2cm', right: '2cm', top: '1cm', bottom: '2cm' },
+    header: { height: '20mm' },
+    footer: {
+      height: '10mm',
+      contents: {
+        default:
+          '<div style="color: #444; text-align: right; font-size: 12px;">{{page}}/{{pages}}</div>', // fallback value
+      },
+    },
+  })
 }
