@@ -4,16 +4,6 @@ import { getCustomRepository } from 'typeorm'
 import { AlertEnum } from '../../entities'
 
 class AlertaController {
-  async findAll(req: Request, res: Response, next: NextFunction) {
-    const alertRepository = getCustomRepository(AlertaRepository)
-    try {
-      const alertas = await alertRepository.findAll()
-      res.json(alertas)
-    } catch (error) {
-      next(error)
-    }
-  }
-
   async findOne(req: Request, res: Response, next: NextFunction) {
     const alertRepository = getCustomRepository(AlertaRepository)
     const { alerta_id } = req.params

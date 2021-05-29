@@ -15,21 +15,6 @@ const router = Router()
 router.use(passport.authenticate('jwt', { session: false }))
 
 // ---------------------- Alerts -------------------------------------
-router.get(
-  '/',
-  verifyRoles(RolEnum.MEDICO, RolEnum.MONITOR),
-  AlertaController.findAll
-)
-router.get(
-  '/:alerta_id',
-  verifyRoles(
-    RolEnum.MONITOR,
-    RolEnum.PERSONAL,
-    RolEnum.ESTUDIANTE,
-    RolEnum.MEDICO
-  ),
-  AlertaController.findOne
-)
 router.post(
   '/',
   verifyRoles(RolEnum.MEDICO, RolEnum.MONITOR),
