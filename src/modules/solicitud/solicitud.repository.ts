@@ -44,7 +44,7 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
   }
 
   async update(solicitud_id: string, body: any) {
-    const { status, receta, medico_id, fecha_atencion } = body
+    const { status, receta, medico_id, fecha_atencion, diagnostico } = body
     const solicitud = await this.repository.findOneOrFail({
       where: { solicitud_id },
     })
@@ -58,6 +58,7 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
       .findOne({ where: { medico_id } })
     solicitud.status = status || solicitud.status
     solicitud.receta = receta || solicitud.receta
+    solicitud.diagnostico = diagnostico || solicitud.diagnostico
     solicitud.fecha_atencion = fecha_atencion || solicitud.fecha_atencion
     solicitud.medico = medico || solicitud.medico
     return await this.repository.save(solicitud)

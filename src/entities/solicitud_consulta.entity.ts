@@ -39,6 +39,9 @@ export class SolicitudConsulta {
   @Column({ type: 'text', nullable: true })
   receta: string
 
+  @Column({ type: 'text', nullable: true })
+  diagnostico: string
+
   @ManyToOne(() => Usuario, (usuario) => usuario.consultas, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
