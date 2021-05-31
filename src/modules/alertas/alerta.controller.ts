@@ -2,6 +2,11 @@ import { NextFunction, Request, Response } from 'express'
 import { AlertaRepository } from './alerta.repository'
 import { getCustomRepository } from 'typeorm'
 import { AlertEnum } from '../../entities'
+import { compile } from '../../helpers/compile_hbs'
+import dateformat from 'dateformat'
+import { sendMail } from '../../libs/mailer'
+import { settings } from '../../config/settings'
+const { EMAIL_CREDENTIALS } = settings
 
 class AlertaController {
   async findOne(req: Request, res: Response, next: NextFunction) {
@@ -20,6 +25,17 @@ class AlertaController {
     const { usuario_id, alerta } = req.body
     try {
       const saved = await alertRepository.createAlert(usuario_id, alerta)
+      const email = compile('alerta.hbs', {
+        fecha: dateformat(Date.now(), 'dd-mm-yyyy'),
+        alerta,
+        departamento: 'Departamento Médico',
+      })
+      sendMail(
+        EMAIL_CREDENTIALS.EMAIL!,
+        saved.usuario.email,
+        'Ha recibido una nueva alerta',
+        email
+      )
       res.json(saved)
     } catch (error) {
       next(error)
