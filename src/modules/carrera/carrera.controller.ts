@@ -45,13 +45,32 @@ export async function findAll(req: Request, res: Response, next: NextFunction)
 
 export async function edit(req: Request, res: Response, next: NextFunction)
 {
-  const { estudiante_id } = req.params
-  const studentRepository = getCustomRepository(CarreraRepository)
+  const { carrera_id } = req.params
+  const carreraRepository = getCustomRepository(CarreraRepository)
 
   try
   {
-    const saved = await studentRepository.update(estudiante_id, req.body)
+    const saved = await carreraRepository.update(carrera_id, req.body)
     res.json(saved)
+  }
+  catch (error)
+  {
+    next(error)
+  }
+}
+
+export async function deleteCarrera(
+  req: Request,
+  res: Response,
+  next: NextFunction
+)
+{
+  const { carrera_id } = req.params
+  try {
+    const deleted = await getCustomRepository(CarreraRepository).delete(
+      carrera_id
+    )
+    res.json(deleted)
   }
   catch (error)
   {

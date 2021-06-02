@@ -2,17 +2,19 @@ import { AbstractRepository, In } from 'typeorm'
 import { Carrera } from '../../entities'
 import { EntityRepository } from 'typeorm'
 import { ErrorHandler } from '../../middlewares/error_handler'
+import { Departamento } from '../../entities/departamento.entity';
 
 @EntityRepository(Carrera)
 export class CarreraRepository extends AbstractRepository<Carrera>
 {
 	async store(body: any)
 	{
-		const { nombre } = body
+		const { nombre, departamento_id } = body
 
 		//Create carrera
 		const carrera = new Carrera()
 		carrera.carrera = nombre
+		carrera.departamento = departamento_id
 
 		return await this.repository.save(carrera)
 	}
@@ -31,28 +33,30 @@ export class CarreraRepository extends AbstractRepository<Carrera>
 	}
 
 	async findAll() {
-		const estudiantes = await this.manager
+		const carreras = await this.manager
 			.createQueryBuilder(Carrera, 'e')
-			.leftJoinAndSelect('e.usuario', 'u')
-			.leftJoinAndSelect('e.carrera', 'c')
-			.leftJoinAndSelect('u.roles', 'r')
+			.leftJoinAndSelect('e.departamento', 'p')
 			.getMany()
 
-		return estudiantes
+		return carreras
 	}
 
-	async update(estudiante_id: string, body: any) {
-		const { nombre, a_paterno, a_materno, carrera_id } = body
-
-		//find carrer
-		const carrera = await this.manager.getRepository(Carrera).findOne({
-			where: { carrera_id },
-		})
+	async update(carrera_id: string, body: any)
+	{
+		const { nombre, departamento_id } = body
 
 		//find student
-		const estudiante = await this.repository.findOneOrFail(estudiante_id)
-		estudiante.carrera = nombre || estudiante.carrera
+		const carrera = await this.repository.findOneOrFail(carrera_id)
+		carrera.carrera = nombre || carrera.carrera
+		carrera.departamento = departamento_id || carrera.departamento
 
-		return await this.repository.save(estudiante)
+		return await this.repository.save(carrera)
 	}
+
+	async delete(carrera_id: string)
+	{
+		const carrera = await this.repository.findOneOrFail({ where: { carrera_id } })
+		const deleted = await this.repository.remove(carrera)
+		return deleted
+	 }
 }

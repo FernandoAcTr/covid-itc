@@ -14,6 +14,7 @@ router.post(
   '/signup',
   [
     check('nombre', 'El campo carrera es obligatorio').notEmpty(),
+    check('departamento_id', 'El campo departamento_id es obligatorio').notEmpty(),
     validateBody,
   ],
   Controller.signup
@@ -31,9 +32,11 @@ router.get(
 )
 
 router.put(
-  '/:estudiante_id',
-  verifyRol(RolEnum.ESTUDIANTE, RolEnum.ADMINISTRADOR),
+  '/:carrera_id',
+  verifyRol(RolEnum.ADMINISTRADOR),
   Controller.edit
 )
+
+router.delete('/:carrera_id', Controller.deleteCarrera)
 
 export default router
