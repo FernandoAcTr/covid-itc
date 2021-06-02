@@ -1,4 +1,4 @@
-import { EntityRepository, AbstractRepository, In } from 'typeorm'
+import { EntityRepository, AbstractRepository, Equal } from 'typeorm'
 import { Usuario } from '../../entities/usuario.entity'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
@@ -44,8 +44,7 @@ export class UsuarioRepository extends AbstractRepository<Usuario> {
   }
 
   async update(usuario_id: string, body: any) {
-    const { email, password, habilitado, sospechoso, requireSurvey, roles } =
-      body
+    const { email, password, habilitado, sospechoso, requireSurvey, rol } = body
 
     const user = await this.repository.findOneOrFail(usuario_id)
     user.email = email || user.email
@@ -56,12 +55,12 @@ export class UsuarioRepository extends AbstractRepository<Usuario> {
     user.requireSurvey =
       requireSurvey !== undefined ? requireSurvey : user.requireSurvey
 
-    //update roles
-    user.roles = roles
-      ? await this.manager.getRepository(Rol).find({
-          where: { rol: In(roles) },
+    //update rol
+    user.rol = rol
+      ? await this.manager.getRepository(Rol).findOneOrFail({
+          where: { rol: Equal(rol) },
         })
-      : user.roles
+      : user.rol
 
     return await this.repository.save(user)
   }

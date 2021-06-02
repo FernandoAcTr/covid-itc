@@ -3,11 +3,15 @@ import {
   Medico,
   Multimedia,
   SolicitudConsulta,
-  StatusEnum,
+  SolicitudStatusEnum,
   Usuario,
 } from '../../entities'
-import { ErrorHandler } from '../../middlewares/error_handler'
+import { ErrorHandler } from '../../middlewares'
 import { deleteFiles } from '../../helpers/file_storage'
+import { compile } from '../../helpers/compile_hbs'
+import pdf from 'html-pdf'
+import dateformat from 'dateformat'
+import { UsuarioRepository } from '../usuario/usuario.repository'
 
 @EntityRepository(SolicitudConsulta)
 export class SolicitudConsultaRepository extends AbstractRepository<SolicitudConsulta> {
@@ -40,11 +44,11 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
   }
 
   async update(solicitud_id: string, body: any) {
-    const { status, receta, medico_id, fecha_atencion } = body
+    const { status, receta, medico_id, fecha_atencion, diagnostico } = body
     const solicitud = await this.repository.findOneOrFail({
       where: { solicitud_id },
     })
-    if (solicitud.status === StatusEnum.ATENDIDA)
+    if (solicitud.status === SolicitudStatusEnum.ATENDIDA)
       throw new ErrorHandler(
         400,
         'Una cosulta atendida no puede ser modificada'
@@ -54,6 +58,7 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
       .findOne({ where: { medico_id } })
     solicitud.status = status || solicitud.status
     solicitud.receta = receta || solicitud.receta
+    solicitud.diagnostico = diagnostico || solicitud.diagnostico
     solicitud.fecha_atencion = fecha_atencion || solicitud.fecha_atencion
     solicitud.medico = medico || solicitud.medico
     return await this.repository.save(solicitud)
@@ -65,13 +70,13 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
 
   async findAtendidas() {
     return await this.repository.find({
-      where: { status: StatusEnum.ATENDIDA },
+      where: { status: SolicitudStatusEnum.ATENDIDA },
     })
   }
 
   async findPendientes() {
     return await this.repository.find({
-      where: { status: StatusEnum.PENDIENTE },
+      where: { status: SolicitudStatusEnum.PENDIENTE },
     })
   }
 
@@ -93,9 +98,47 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
     const solicitud = await this.repository.findOneOrFail({
       where: { solicitud_id },
     })
-    if (solicitud.status === StatusEnum.ATENDIDA)
+    if (solicitud.status === SolicitudStatusEnum.ATENDIDA)
       throw new ErrorHandler(403, 'Una cosulta atendida no puede ser eliminada')
     deleteFiles(solicitud.evidencias)
     return await this.repository.remove(solicitud)
+  }
+
+  async createReceta(solicitud_id: string): Promise<pdf.CreateResult> {
+    const solicitud = await this.repository.findOne({
+      where: { solicitud_id },
+    })
+    if (!solicitud) throw new ErrorHandler(404, 'Receta no encontrada')
+    if (solicitud.status === SolicitudStatusEnum.PENDIENTE)
+      throw new ErrorHandler(400, 'La solicitud aun no ha sido atendida')
+
+    const usuario = await this.manager
+      .getCustomRepository(UsuarioRepository)
+      .findOne(solicitud.usuario.usuario_id)
+
+    const { medico, receta, sintomas } = solicitud
+    const paciente = usuario.personal || usuario.estudiante
+
+    const data = {
+      medico: {
+        nombre: `${medico.nombre} ${medico.a_paterno} ${medico.a_materno}`,
+        cedula: medico.cedula,
+      },
+      paciente: {
+        nombre: `${paciente.nombre} ${paciente.a_paterno} ${paciente.a_materno}`,
+      },
+      sintomas,
+      receta,
+      fecha: dateformat(solicitud.fecha_atencion, 'dd-mm-yyyy'),
+    }
+
+    const html = compile('receta.hbs', data)
+
+    return pdf.create(html, {
+      width: '20cm',
+      height: '13cm',
+      border: { left: '2cm', right: '2cm', top: '1cm', bottom: '2cm' },
+      header: { height: '20mm' },
+    })
   }
 }

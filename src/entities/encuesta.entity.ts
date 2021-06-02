@@ -35,7 +35,7 @@ export class Encuesta {
 
   toJSON() {
     let resp: any = this
-    delete resp.usuario?.roles
+    delete resp.usuario?.rol
     return resp
   }
 }

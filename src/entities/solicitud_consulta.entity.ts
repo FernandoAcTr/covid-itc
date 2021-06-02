@@ -17,7 +17,7 @@ export enum ModalidadConsultaEnum {
   PRESCENCIAL = 'presencial',
 }
 
-export enum StatusEnum {
+export enum SolicitudStatusEnum {
   PENDIENTE = 'pendiente',
   ATENDIDA = 'atendida',
 }
@@ -33,11 +33,14 @@ export class SolicitudConsulta {
   @Column({ type: 'enum', enum: ModalidadConsultaEnum })
   modalidad: ModalidadConsultaEnum
 
-  @Column({ type: 'enum', enum: StatusEnum, default: StatusEnum.PENDIENTE })
-  status: StatusEnum
+  @Column({ type: 'enum', enum: SolicitudStatusEnum, default: SolicitudStatusEnum.PENDIENTE })
+  status: SolicitudStatusEnum
 
   @Column({ type: 'text', nullable: true })
   receta: string
+
+  @Column({ type: 'text', nullable: true })
+  diagnostico: string
 
   @ManyToOne(() => Usuario, (usuario) => usuario.consultas, {
     onDelete: 'CASCADE',
@@ -78,7 +81,7 @@ export class SolicitudConsulta {
 
   toJSON() {
     let solicitud: any = this
-    delete solicitud.usuario?.roles
+    delete solicitud.usuario?.rol
     delete solicitud.usuario?.habilitado
     return solicitud
   }

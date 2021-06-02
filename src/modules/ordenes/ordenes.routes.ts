@@ -4,7 +4,7 @@ import { check } from 'express-validator'
 import {
   validateBody,
   validateOrderResult,
-  verifyRoles,
+  verifyRol,
   RolEnum,
 } from '../../middlewares/'
 import passport from '../../libs/passport'
@@ -16,7 +16,7 @@ router.use(passport.authenticate('jwt', { session: false }))
 
 router.post(
   '/',
-  verifyRoles(RolEnum.MEDICO),
+  verifyRol(RolEnum.MEDICO),
   [
     check('usuario_id', 'El campo usuario_id es obligatorio').notEmpty(),
     check('medico_id', 'El campo medico_id es obligatorio').notEmpty(),
@@ -28,12 +28,12 @@ router.post(
 
 router.get(
   '/',
-  verifyRoles(RolEnum.MEDICO, RolEnum.MONITOR),
+  verifyRol(RolEnum.MEDICO, RolEnum.MONITOR),
   Controller.findAll
 )
 router.get(
   '/:orden_id',
-  verifyRoles(
+  verifyRol(
     RolEnum.MEDICO,
     RolEnum.MONITOR,
     RolEnum.PERSONAL,
@@ -43,7 +43,7 @@ router.get(
 )
 router.get(
   '/usuario/:usuario_id',
-  verifyRoles(
+  verifyRol(
     RolEnum.MEDICO,
     RolEnum.MONITOR,
     RolEnum.PERSONAL,
@@ -53,7 +53,7 @@ router.get(
 )
 router.put(
   '/:orden_id',
-  verifyRoles(RolEnum.MEDICO),
+  verifyRol(RolEnum.MEDICO),
   [check('resultado').custom(validateOrderResult), validateBody],
   Controller.update
 )

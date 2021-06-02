@@ -7,7 +7,7 @@ import {
   ResultadoEnum,
   RespuestaEnum,
   ModalidadConsultaEnum,
-  StatusEnum,
+  SolicitudStatusEnum,
 } from '../entities'
 
 export async function existCarrer(carrera_id: any) {
@@ -23,15 +23,13 @@ export function validateModality(modalidad: string) {
   )
 }
 
-export function validateRoles(roles: string[]) {
+export function validateRol(rol: string) {
   const enumValues = Object.values(RolEnum)
 
-  for (const rol of roles) {
-    if (!enumValues.includes(rol as RolEnum)) {
-      throw new Error(
-        'Los roles solamente puede tomar los valores: ' + enumValues.join(',')
-      )
-    }
+  if (!enumValues.includes(rol as RolEnum)) {
+    throw new Error(
+      'El rol solamente puede tomar los valores: ' + enumValues.join(',')
+    )
   }
 
   return true
@@ -74,8 +72,8 @@ export function validateModalidadConsulta(modalidad: string) {
 }
 
 export function validateConsultaStatus(status: string) {
-  const enumValues = Object.values(StatusEnum)
-  if (enumValues.includes(status as StatusEnum)) return true
+  const enumValues = Object.values(SolicitudStatusEnum)
+  if (enumValues.includes(status as SolicitudStatusEnum)) return true
   throw new Error(
     'El status de la consulta solamente puede tomar los valores: ' +
       enumValues.join(',')

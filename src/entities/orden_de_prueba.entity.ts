@@ -22,6 +22,9 @@ export class OrdenDePrueba {
   @Column({ type: 'enum', enum: ResultadoEnum, nullable: true })
   resultado: ResultadoEnum
 
+  @Column({ nullable: true })
+  fecha_deteccion: Date
+
   @ManyToOne(() => Usuario, (usuario) => usuario.ordenes, {
     eager: true,
     onDelete: 'CASCADE',
@@ -44,7 +47,7 @@ export class OrdenDePrueba {
 
   toJSON() {
     let orden: any = this
-    delete orden.usuario.roles
+    delete orden.usuario.rol
     delete orden.usuario.habilitado
     delete orden.usuario.sospechoso
     delete orden.usuario.requireSurvey

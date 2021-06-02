@@ -6,7 +6,10 @@ import { Usuario } from '../entities/usuario.entity'
 
 export const jwtStrategy = new JwtStrategy(
   {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    jwtFromRequest: ExtractJwt.fromExtractors([
+      ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ExtractJwt.fromUrlQueryParameter('token'),
+    ]),
     secretOrKey: settings.SECRET,
   },
   async (payload, done) => {

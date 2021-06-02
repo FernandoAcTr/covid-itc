@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+      .fecha {
+        text-align: right;
+      }
+
+      .fecha span {
+        background-color: black;
+        color: white;
+      }
+
+      .footer {
+        font-size: 12px;
+        color: blue;
+      }
+
+      .text-center {
+        text-align: center;
+      }
+
+      .m-0 {
+        margin: 0;
+      }
+
+      .mt-0 {
+        margin-top: 0;
+      }
+
+    </style>
+  </head>
+
+  <body>
+    <p class="fecha">Celaya, Guanajuato, <span>{{fecha}}</span></p>
+    <h3 class="text-center">Instituto Tecnológico de Celaya</h3>
+    <p>Has recibido la siguiente alerta:</p>
+    <p>{{alerta}}</p>
+
+    <p class="text-center m-0"><b>Atentamente</b></p>
+    <p class="text-center mt-0"><b>{{departamento}}</b></p>
+
+    <p class="m-0 footer">A. Garcia Cubas No. 600 Esq. Ev. Tecnológico</p>
+    <p class="m-0 footer">Col. Alfredo Vázquez Bonfil. CP. 38010</p>
+    <p class="m-0 footer">Celaya, Guanajuato</p>
+  </body>
+
+</html>

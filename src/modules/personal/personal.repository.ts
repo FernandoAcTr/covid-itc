@@ -1,8 +1,8 @@
-import { AbstractRepository, EntityRepository } from 'typeorm'
+import { AbstractRepository, EntityRepository, Equal } from 'typeorm'
 import { In } from 'typeorm'
 import { Departamento, Personal, Rol, RolEnum, Usuario } from '../../entities'
 import { requireSurvey } from '../../helpers/require_surver.helper'
-import { UsuarioRepository } from '../usuario/usuario'
+import { UsuarioRepository } from '../usuario/usuario.repository'
 import { ErrorHandler } from '../../middlewares/error_handler'
 
 @EntityRepository(Personal)
@@ -22,14 +22,14 @@ export class PersonalRepository extends AbstractRepository<Personal> {
 
     // Create user Role
     const userRol = await this.manager.getRepository(Rol).findOneOrFail({
-      where: { rol: In([RolEnum.PERSONAL]) },
+      where: { rol: Equal(RolEnum.PERSONAL) },
     })
 
     //create user
     const usuario = new Usuario()
     usuario.email = email
     usuario.password = userRepository.encrypPassword(password)
-    usuario.roles = [userRol]
+    usuario.rol = userRol
     usuario.requireSurvey = await requireSurvey()
 
     //find department
@@ -54,7 +54,7 @@ export class PersonalRepository extends AbstractRepository<Personal> {
       .createQueryBuilder(Personal, 'p')
       .leftJoinAndSelect('p.usuario', 'u')
       .leftJoinAndSelect('p.departamento', 'd')
-      .leftJoinAndSelect('u.roles', 'r')
+      .leftJoinAndSelect('u.rol', 'r')
       .getMany()
 
     return personal

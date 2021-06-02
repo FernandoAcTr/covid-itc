@@ -4,7 +4,7 @@ import { check } from 'express-validator'
 import {
   existCarrer,
   validateBody,
-  verifyRoles,
+  verifyRol,
   RolEnum,
 } from '../../middlewares'
 import passport from '../../libs/passport'
@@ -30,15 +30,15 @@ router.post(
 // ---------------------- Auth -------------------------------------
 router.use(passport.authenticate('jwt', { session: false }))
 
-router.get('/', verifyRoles(RolEnum.ADMINISTRADOR), Controller.findAll)
+router.get('/', verifyRol(RolEnum.ADMINISTRADOR), Controller.findAll)
 router.get(
   '/:estudiante_id',
-  verifyRoles(RolEnum.ESTUDIANTE, RolEnum.ADMINISTRADOR),
+  verifyRol(RolEnum.ESTUDIANTE, RolEnum.ADMINISTRADOR),
   Controller.findOne
 )
 router.put(
   '/:estudiante_id',
-  verifyRoles(RolEnum.ESTUDIANTE, RolEnum.ADMINISTRADOR),
+  verifyRol(RolEnum.ESTUDIANTE, RolEnum.ADMINISTRADOR),
   Controller.edit
 )
 

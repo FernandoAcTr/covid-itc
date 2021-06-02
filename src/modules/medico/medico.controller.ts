@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
-import { UsuarioRepository } from '../usuario/usuario'
+import { UsuarioRepository } from '../usuario/usuario.repository'
 import { MedicoRepository } from './medico.repository'
 
 export async function signup(req: Request, res: Response, next: NextFunction) {

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { getCustomRepository } from 'typeorm'
-import { UsuarioRepository } from './usuario'
+import { UsuarioRepository } from './usuario.repository'
 import { ErrorHandler } from '../../middlewares/error_handler'
 
 export async function login(req: Request, res: Response, next: NextFunction) {

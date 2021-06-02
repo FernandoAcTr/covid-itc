@@ -5,7 +5,8 @@ import {
   validateModalidadConsulta,
   validateConsultaStatus,
   validateBody,
-  verifyRoles,
+  verifyRol,
+  verifyResourceReceta,
 } from '../../middlewares'
 import passport from '../../libs/passport'
 import { RolEnum } from '../../entities'
@@ -18,7 +19,7 @@ router.use(passport.authenticate('jwt', { session: false }))
 // --------------------- Consultas ---------------------------------
 router.post(
   '/',
-  verifyRoles(RolEnum.ESTUDIANTE, RolEnum.PERSONAL),
+  verifyRol(RolEnum.ESTUDIANTE, RolEnum.PERSONAL),
   [
     check('usuario_id', 'El campo usuario_id es obligatorio').notEmpty(),
     check('sintomas', 'El campo sintomas es obligatorio').notEmpty(),
@@ -32,7 +33,7 @@ router.post(
 
 router.put(
   '/:solicitud_id',
-  verifyRoles(RolEnum.MEDICO),
+  verifyRol(RolEnum.MEDICO),
   [
     check('modalidad').optional().custom(validateModalidadConsulta),
     check('status').optional().custom(validateConsultaStatus),
@@ -43,13 +44,13 @@ router.put(
 
 router.get(
   '/',
-  verifyRoles(RolEnum.MEDICO, RolEnum.MONITOR),
+  verifyRol(RolEnum.MEDICO, RolEnum.MONITOR),
   Controller.findAll
 )
 
 router.get(
   '/usuario/:usuario_id',
-  verifyRoles(
+  verifyRol(
     RolEnum.MEDICO,
     RolEnum.MONITOR,
     RolEnum.ESTUDIANTE,
@@ -60,14 +61,21 @@ router.get(
 
 router.get(
   '/medico/:medico_id',
-  verifyRoles(RolEnum.MEDICO, RolEnum.MONITOR),
+  verifyRol(RolEnum.MEDICO, RolEnum.MONITOR),
   Controller.findByMedico
 )
 
 router.delete(
   '/:solicitud_id',
-  verifyRoles(RolEnum.MEDICO),
+  verifyRol(RolEnum.MEDICO),
   Controller.deleteConsulta
+)
+
+router.get(
+  '/receta/:solicitud_id',
+  verifyRol(RolEnum.MEDICO, RolEnum.ESTUDIANTE, RolEnum.PERSONAL),
+  verifyResourceReceta,
+  Controller.getReceta
 )
 
 export default router

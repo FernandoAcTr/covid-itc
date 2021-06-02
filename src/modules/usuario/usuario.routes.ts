@@ -3,9 +3,9 @@ import * as Controller from './usuario.controller'
 import { check } from 'express-validator'
 import {
   validateBody,
-  validateRoles,
+  validateRol,
   RolEnum,
-  verifyRoles,
+  verifyRol,
 } from '../../middlewares'
 import passport from '../../libs/passport'
 
@@ -24,12 +24,12 @@ router.post(
 // ---------------------- Auth -------------------------------------
 router.use(passport.authenticate('jwt', { session: false }))
 
-router.get('/', verifyRoles(RolEnum.ADMINISTRADOR), Controller.findAll)
+router.get('/', verifyRol(RolEnum.ADMINISTRADOR), Controller.findAll)
 router.get('/:usuario_id', Controller.findOne)
 
 router.delete(
   '/:usuario_id',
-  verifyRoles(RolEnum.ADMINISTRADOR),
+  verifyRol(RolEnum.ADMINISTRADOR),
   Controller.disableUser
 )
 
@@ -37,7 +37,7 @@ router.put(
   '/:usuario_id',
   [
     check('email', 'El campo email no es un email valido').optional().isEmail(),
-    check('roles').optional().custom(validateRoles),
+    check('rol').optional().custom(validateRol),
     validateBody,
   ],
   Controller.updateUser

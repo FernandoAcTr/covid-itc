@@ -16,4 +16,11 @@ export const settings = {
     S3_ENDPOINT: process.env.S3_ENDPOINT,
     BUCKET_NAME: process.env.BUCKET_NAME,
   },
+  EMAIL_CREDENTIALS: {
+    EMAIL: process.env.EMAIL,
+    ACCESS_TOKEN: process.env.EMAIL_ACCESS_TOKEN,
+    REFRESH_TOKEN: process.env.EMAIL_REFRESH_TOKEN,
+    CLIENT_ID: process.env.EMAIL_CLIENT_ID,
+    CLIENT_SECRET: process.env.EMAIL_CLIENT_SECRET,
+  },
 }

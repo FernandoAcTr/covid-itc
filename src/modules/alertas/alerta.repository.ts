@@ -5,11 +5,6 @@ import { ErrorHandler } from '../../middlewares/error_handler'
 
 @EntityRepository(Alerta)
 export class AlertaRepository extends AbstractRepository<Alerta> {
-  async findAll() {
-    const alertas = await this.repository.find({ relations: ['usuario'] })
-    return alertas
-  }
-
   async findOne(alerta_id: string) {
     const alert = await this.repository.findOne({
       where: { alerta_id },

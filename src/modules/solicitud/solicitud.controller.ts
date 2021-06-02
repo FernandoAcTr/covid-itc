@@ -23,10 +23,9 @@ export async function updateConsulta(
   next: NextFunction
 ) {
   try {
-    const solicitud = await getCustomRepository(SolicitudConsultaRepository).update(
-      req.params.solicitud_id,
-      req.body
-    )
+    const solicitud = await getCustomRepository(
+      SolicitudConsultaRepository
+    ).update(req.params.solicitud_id, req.body)
     res.json(solicitud)
   } catch (error) {
     next(error)
@@ -87,10 +86,29 @@ export async function deleteConsulta(
   next: NextFunction
 ) {
   try {
-    const solicitud = await getCustomRepository(SolicitudConsultaRepository).delete(
-      req.params.solicitud_id
-    )
+    const solicitud = await getCustomRepository(
+      SolicitudConsultaRepository
+    ).delete(req.params.solicitud_id)
     res.json(solicitud)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function getReceta(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const pdf = await getCustomRepository(
+      SolicitudConsultaRepository
+    ).createReceta(req.params.solicitud_id)
+    pdf.toStream((err, stream) => {
+      if (err) return next(err)
+      res.setHeader('Content-type', 'application/pdf')
+      stream.pipe(res)
+    })
   } catch (error) {
     next(error)
   }

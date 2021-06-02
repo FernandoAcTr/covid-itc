@@ -10,6 +10,8 @@ import RouterAlertas from './modules/alertas/alerta.routes'
 import RouterOrden from './modules/ordenes/ordenes.routes'
 import RouterSolicitud from './modules/solicitud/solicitud.routes'
 import RouterCarrera from './modules/carrera/carrera.routes'
+import RouterReportes from './modules/reportes/reportes.routes'
+import RouterTrazabilidad from './modules/trazabilidad/trazabilidad.routes'
 
 //importing all routes here
 router.use('/estudiantes', RouterStudent)
@@ -21,5 +23,7 @@ router.use('/alertas', RouterAlertas)
 router.use('/ordenes', RouterOrden)
 router.use('/consultas', RouterSolicitud)
 router.use('/carrera', RouterCarrera)
+router.use('/reportes', RouterReportes)
+router.use('/trazabilidad', RouterTrazabilidad)
 
 export default router
