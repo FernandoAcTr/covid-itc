@@ -88,6 +88,15 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
     return await this.repository.find()
   }
 
+  async findOne(solicitud_id: string) {
+    const solicitud = await this.repository.find({
+      where: { solicitud_id },
+    })
+    if (!solicitud)
+      throw new ErrorHandler(404, 'Solicitud de consulta no encontrada')
+    return solicitud
+  }
+
   async findAtendidas() {
     return await this.repository.find({
       where: { status: SolicitudStatusEnum.ATENDIDA },
@@ -124,7 +133,6 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
     return await this.repository.remove(solicitud)
   }
 
-  //TODO obtener los medicamentos y pasarlos a la receta
   async createReceta(solicitud_id: string): Promise<pdf.CreateResult> {
     const solicitud = await this.repository.findOne({
       where: { solicitud_id },
@@ -137,7 +145,7 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
       .getCustomRepository(UsuarioRepository)
       .findOne(solicitud.usuario.usuario_id)
 
-    const { medico, sintomas } = solicitud
+    const { medico, sintomas, medicamentos } = solicitud
     const paciente = usuario.personal || usuario.estudiante
 
     const data = {
@@ -149,6 +157,7 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
         nombre: `${paciente.nombre} ${paciente.a_paterno} ${paciente.a_materno}`,
       },
       sintomas,
+      medicamentos,
       fecha: dateformat(solicitud.fecha_atencion, 'dd-mm-yyyy'),
     }
 

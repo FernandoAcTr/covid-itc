@@ -42,10 +42,12 @@ router.put(
   Controller.updateConsulta
 )
 
+router.get('/', verifyRol(RolEnum.MEDICO, RolEnum.MONITOR), Controller.findAll)
+
 router.get(
-  '/',
+  '/:solicitud_id',
   verifyRol(RolEnum.MEDICO, RolEnum.MONITOR),
-  Controller.findAll
+  Controller.findOne
 )
 
 router.get(
