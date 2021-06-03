@@ -11,6 +11,7 @@ import RouterOrden from './modules/ordenes/ordenes.routes'
 import RouterSolicitud from './modules/solicitud/solicitud.routes'
 import RouterReportes from './modules/reportes/reportes.routes'
 import RouterTrazabilidad from './modules/trazabilidad/trazabilidad.routes'
+import RouterMedicamento from './modules/medicamento/medicamento.routes'
 
 //importing all routes here
 router.use('/estudiantes', RouterStudent)
@@ -23,5 +24,6 @@ router.use('/ordenes', RouterOrden)
 router.use('/consultas', RouterSolicitud)
 router.use('/reportes', RouterReportes)
 router.use('/trazabilidad', RouterTrazabilidad)
+router.use('/medicamentos', RouterMedicamento)
 
 export default router
