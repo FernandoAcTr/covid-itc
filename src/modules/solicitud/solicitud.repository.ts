@@ -1,10 +1,11 @@
-import { AbstractRepository, EntityRepository } from 'typeorm'
+import { AbstractRepository, EntityRepository, In } from 'typeorm'
 import {
   Medico,
   Multimedia,
   SolicitudConsulta,
   SolicitudStatusEnum,
   Usuario,
+  Medicamento,
 } from '../../entities'
 import { ErrorHandler } from '../../middlewares'
 import { deleteFiles } from '../../helpers/file_storage'
@@ -12,6 +13,7 @@ import { compile } from '../../helpers/compile_hbs'
 import pdf from 'html-pdf'
 import dateformat from 'dateformat'
 import { UsuarioRepository } from '../usuario/usuario.repository'
+import { SolicitudMedicamento } from '../../entities/solicitud_medicamento.entity'
 
 @EntityRepository(SolicitudConsulta)
 export class SolicitudConsultaRepository extends AbstractRepository<SolicitudConsulta> {
@@ -38,13 +40,12 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
 
     solicitud.evidencias = evidencias
 
-    console.log(files)
-
     return await this.repository.save(solicitud)
   }
 
   async update(solicitud_id: string, body: any) {
-    const { status, receta, medico_id, fecha_atencion, diagnostico } = body
+    const { status, medico_id, fecha_atencion, diagnostico, medicamentos } =
+      body
     const solicitud = await this.repository.findOneOrFail({
       where: { solicitud_id },
     })
@@ -53,14 +54,33 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
         400,
         'Una cosulta atendida no puede ser modificada'
       )
+
+    //get all ids from medicamentos
+    const receta: SolicitudMedicamento[] = []
+    if (medicamentos)
+      for (const medicamento of medicamentos) {
+        const medicamentoDB = await this.manager
+          .getRepository(Medicamento)
+          .findOneOrFail({
+            where: { medicamento_id: medicamento.medicamento_id },
+          })
+        const relation = new SolicitudMedicamento()
+        relation.medicamento = medicamentoDB
+        relation.solicitud_consulta = solicitud
+        relation.receta = medicamento.receta
+        receta.push(relation)
+      }
+
     const medico = await this.manager
       .getRepository(Medico)
       .findOne({ where: { medico_id } })
+
     solicitud.status = status || solicitud.status
-    solicitud.receta = receta || solicitud.receta
     solicitud.diagnostico = diagnostico || solicitud.diagnostico
     solicitud.fecha_atencion = fecha_atencion || solicitud.fecha_atencion
     solicitud.medico = medico || solicitud.medico
+    if (medicamentos) solicitud.medicamentos = receta
+
     return await this.repository.save(solicitud)
   }
 
@@ -104,6 +124,7 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
     return await this.repository.remove(solicitud)
   }
 
+  //TODO obtener los medicamentos y pasarlos a la receta
   async createReceta(solicitud_id: string): Promise<pdf.CreateResult> {
     const solicitud = await this.repository.findOne({
       where: { solicitud_id },
@@ -116,7 +137,7 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
       .getCustomRepository(UsuarioRepository)
       .findOne(solicitud.usuario.usuario_id)
 
-    const { medico, receta, sintomas } = solicitud
+    const { medico, sintomas } = solicitud
     const paciente = usuario.personal || usuario.estudiante
 
     const data = {
@@ -128,7 +149,6 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
         nombre: `${paciente.nombre} ${paciente.a_paterno} ${paciente.a_materno}`,
       },
       sintomas,
-      receta,
       fecha: dateformat(solicitud.fecha_atencion, 'dd-mm-yyyy'),
     }
 
