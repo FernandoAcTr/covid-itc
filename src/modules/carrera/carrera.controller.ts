@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
 import { CarreraRepository } from './carrera.repository'
 
-export async function signup(req: Request, res: Response, next: NextFunction)
+export async function store(req: Request, res: Response, next: NextFunction)
 {
   const carreraRepository = getCustomRepository(CarreraRepository)
 
@@ -77,21 +77,3 @@ export async function deleteCarrera(
     next(error)
   }
 }
-
-export function responseSurvey(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {}
-
-export function getAlerts(req: Request, res: Response, next: NextFunction) {}
-
-export function getOrders(req: Request, res: Response, next: NextFunction) {}
-
-export function requestConsulta(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {}
-
-export function getConsultas(req: Request, res: Response, next: NextFunction) {}
