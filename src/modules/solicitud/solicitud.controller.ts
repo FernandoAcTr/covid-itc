@@ -32,6 +32,16 @@ export async function updateConsulta(
   }
 }
 
+export async function findOne(req: Request, res: Response, next: NextFunction) {
+  const consultaRepository = getCustomRepository(SolicitudConsultaRepository)
+  try {
+    const solicitud = await consultaRepository.findOne(req.params.solicitud_id)
+    res.json(solicitud)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export async function findAll(req: Request, res: Response, next: NextFunction) {
   const atendidas = req.query.atendidas
   const consultaRepository = getCustomRepository(SolicitudConsultaRepository)

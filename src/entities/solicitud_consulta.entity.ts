@@ -6,11 +6,13 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { Usuario } from './usuario.entity'
 import { Medico } from './medico.entity'
 import { Multimedia } from './multimedia.entity'
+import { SolicitudMedicamento } from './solicitud_medicamento.entity'
 
 export enum ModalidadConsultaEnum {
   VIRTUAL = 'virtual',
@@ -33,11 +35,12 @@ export class SolicitudConsulta {
   @Column({ type: 'enum', enum: ModalidadConsultaEnum })
   modalidad: ModalidadConsultaEnum
 
-  @Column({ type: 'enum', enum: SolicitudStatusEnum, default: SolicitudStatusEnum.PENDIENTE })
+  @Column({
+    type: 'enum',
+    enum: SolicitudStatusEnum,
+    default: SolicitudStatusEnum.PENDIENTE,
+  })
   status: SolicitudStatusEnum
-
-  @Column({ type: 'text', nullable: true })
-  receta: string
 
   @Column({ type: 'text', nullable: true })
   diagnostico: string
@@ -78,6 +81,13 @@ export class SolicitudConsulta {
     },
   })
   evidencias: Multimedia[]
+
+  @OneToMany(
+    () => SolicitudMedicamento,
+    (relation) => relation.solicitud_consulta,
+    { cascade: true, eager: true }
+  )
+  medicamentos: SolicitudMedicamento[]
 
   toJSON() {
     let solicitud: any = this
