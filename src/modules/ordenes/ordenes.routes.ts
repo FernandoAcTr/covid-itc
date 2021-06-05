@@ -26,11 +26,7 @@ router.post(
   Controller.createOrden
 )
 
-router.get(
-  '/',
-  verifyRol(RolEnum.MEDICO, RolEnum.MONITOR),
-  Controller.findAll
-)
+router.get('/', verifyRol(RolEnum.MEDICO, RolEnum.MONITOR), Controller.findAll)
 router.get(
   '/:orden_id',
   verifyRol(

@@ -46,7 +46,7 @@ export class OrdenDePrueba {
   tipo: TipoPrueba
 
   toJSON() {
-    let orden: any = this
+    const orden: any = this
     delete orden.usuario.rol
     delete orden.usuario.habilitado
     delete orden.usuario.sospechoso

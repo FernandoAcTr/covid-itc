@@ -31,13 +31,13 @@ export class Usuario {
   @Column({
     default: true,
   })
-  habilitado: Boolean
+  habilitado: boolean
 
   @Column({ default: false })
-  sospechoso: Boolean
+  sospechoso: boolean
 
   @Column({ name: 'require_survey' })
-  requireSurvey: Boolean
+  requireSurvey: boolean
 
   @OneToMany(() => Alerta, (alerta) => alerta.usuario)
   alertas: Alerta[]

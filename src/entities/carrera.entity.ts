@@ -1,4 +1,13 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
 import { Departamento } from './departamento.entity'
 import { Estudiante } from './estudiante.entity'
 
@@ -15,7 +24,7 @@ export class Carrera {
     onDelete: 'RESTRICT',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn({name: 'departamento_id'})
+  @JoinColumn({ name: 'departamento_id' })
   departamento: Departamento
 
   @OneToMany(() => Estudiante, (estudiante) => estudiante.carrera)

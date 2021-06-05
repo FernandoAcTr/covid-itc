@@ -90,7 +90,7 @@ export class SolicitudConsulta {
   medicamentos: SolicitudMedicamento[]
 
   toJSON() {
-    let solicitud: any = this
+    const solicitud: any = this
     delete solicitud.usuario?.rol
     delete solicitud.usuario?.habilitado
     return solicitud

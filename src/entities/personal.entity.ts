@@ -18,7 +18,11 @@ export class Personal extends Persona {
   @Column()
   rfc: string
 
-  @ManyToOne(() => Departamento, { eager: true, onDelete: 'SET NULL', onUpdate: 'CASCADE' })
+  @ManyToOne(() => Departamento, {
+    eager: true,
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'departamento_id' })
   departamento: Departamento
 

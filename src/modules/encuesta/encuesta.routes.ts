@@ -71,10 +71,6 @@ router.get(
   ),
   Controller.findAllByUserId
 )
-router.get(
-  '/',
-  verifyRol(RolEnum.MEDICO, RolEnum.MONITOR),
-  Controller.findAll
-)
+router.get('/', verifyRol(RolEnum.MEDICO, RolEnum.MONITOR), Controller.findAll)
 
 export default router
