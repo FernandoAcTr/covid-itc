@@ -11,6 +11,8 @@
     "build": "tsc",
     "start": "node build",
     "prettier:fix": "prettier --config .prettierrc.json --write src/**/**/*.ts",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
     "migrations:run": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:run",
     "migrations:revert": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:revert",
     "migrations:generate": "ts-node --transpile-only ./node_modules/typeorm/cli.js migration:generate --name"
