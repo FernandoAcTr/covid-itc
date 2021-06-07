@@ -67,9 +67,10 @@ export class EncuestaRepository extends AbstractRepository<Encuesta> {
   }
 
   async findAllByUserId(usuario_id: string) {
-    const usuario = await this.manager
-      .getRepository(Usuario)
-      .findOneOrFail({ where: { usuario_id }, relations: ['encuestas'] })
+    const usuario = await this.manager.getRepository(Usuario).findOneOrFail({
+      where: { usuario_id },
+      relations: ['encuestas', 'encuestas.respuestas'],
+    })
 
     return usuario.encuestas
   }
