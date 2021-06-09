@@ -1,12 +1,11 @@
 import { EntityRepository, AbstractRepository } from 'typeorm'
 import { Trazabilidad } from '../../entities/trazabilidad.entity'
 import { Usuario } from '../../entities/usuario.entity'
-import { ErrorHandler } from '../../middlewares/error_handler'
-//relations: ['estudiante', 'personal', 'medico']
+import { ErrorHandler } from '../../middlewares'
 
 @EntityRepository(Trazabilidad)
 export class TrazabilidadRepository extends AbstractRepository<Trazabilidad> {
-  async getTrazabilidad(usuario_id: string) {
+  async getTrazabilidad(usuario_id: string): Promise<Trazabilidad[]> {
     const usuario = await this.manager.getRepository(Usuario).findOne({
       where: { usuario_id },
       relations: ['trazabilidad'],
@@ -15,7 +14,7 @@ export class TrazabilidadRepository extends AbstractRepository<Trazabilidad> {
     return usuario.trazabilidad
   }
 
-  async addContact(body: any) {
+  async addContact(body: any): Promise<Trazabilidad> {
     const { usuario_id, contacto_id, fecha } = body
 
     const usuario = await this.manager
@@ -34,14 +33,14 @@ export class TrazabilidadRepository extends AbstractRepository<Trazabilidad> {
     return await this.repository.save(trazabilidad)
   }
 
-  async deleteContact(trazabilidad_id: number) {
+  async deleteContact(trazabilidad_id: number): Promise<Trazabilidad> {
     const trazabilidad = await this.repository.findOneOrFail({
       where: { trazabilidad_id },
     })
     return await this.repository.remove(trazabilidad)
   }
 
-  async update(trazabilidad_id: number, body: any) {
+  async update(trazabilidad_id: number, body: any): Promise<Trazabilidad> {
     const { avisado } = body
     const trazabilidad = await this.repository.findOneOrFail({
       where: { trazabilidad_id },

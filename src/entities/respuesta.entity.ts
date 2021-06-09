@@ -31,7 +31,7 @@ export class Respuesta {
   @Column({ type: 'enum', enum: RespuestaEnum, nullable: false })
   respuesta: RespuestaEnum
 
-  toJSON() {
+  toJSON(): any {
     const { detalle_id, ...other } = this
     return other
   }

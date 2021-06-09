@@ -6,7 +6,7 @@ export async function createConsulta(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const solicitud = await getCustomRepository(
       SolicitudConsultaRepository
@@ -21,7 +21,7 @@ export async function updateConsulta(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const solicitud = await getCustomRepository(
       SolicitudConsultaRepository
@@ -32,7 +32,11 @@ export async function updateConsulta(
   }
 }
 
-export async function findOne(req: Request, res: Response, next: NextFunction) {
+export async function findOne(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const consultaRepository = getCustomRepository(SolicitudConsultaRepository)
   try {
     const solicitud = await consultaRepository.findOne(req.params.solicitud_id)
@@ -42,7 +46,11 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function findAll(req: Request, res: Response, next: NextFunction) {
+export async function findAll(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const atendidas = req.query.atendidas
   const consultaRepository = getCustomRepository(SolicitudConsultaRepository)
   try {
@@ -64,7 +72,7 @@ export async function findByUser(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const solicitudes = await getCustomRepository(
       SolicitudConsultaRepository
@@ -79,7 +87,7 @@ export async function findByMedico(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const solicitudes = await getCustomRepository(
       SolicitudConsultaRepository
@@ -94,7 +102,7 @@ export async function deleteConsulta(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const solicitud = await getCustomRepository(
       SolicitudConsultaRepository
@@ -109,7 +117,7 @@ export async function getReceta(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const pdf = await getCustomRepository(
       SolicitudConsultaRepository

@@ -1,13 +1,13 @@
 import { Router } from 'express'
 import AlertaController from './alerta.controller'
 import { check } from 'express-validator'
+import passport from '../../libs/passport'
 import {
   validateBody,
   validateAlertStatus,
   verifyRol,
   RolEnum,
 } from '../../middlewares'
-import passport from '../../libs/passport'
 
 const router = Router()
 

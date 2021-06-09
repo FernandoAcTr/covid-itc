@@ -1,9 +1,9 @@
+import dateformat from 'dateformat'
 import { NextFunction, Request, Response } from 'express'
 import { AlertaRepository } from './alerta.repository'
 import { getCustomRepository } from 'typeorm'
 import { AlertEnum } from '../../entities'
 import { compile } from '../../helpers/compile_hbs'
-import dateformat from 'dateformat'
 import { sendMail } from '../../libs/mailer'
 import { settings } from '../../config/settings'
 const { EMAIL_CREDENTIALS } = settings

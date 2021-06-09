@@ -6,7 +6,7 @@ export async function createOrden(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const orden = await getCustomRepository(OrdenRepository).createOrder(
       req.body
@@ -17,7 +17,11 @@ export async function createOrden(
   }
 }
 
-export async function findOne(req: Request, res: Response, next: NextFunction) {
+export async function findOne(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const { orden_id } = req.params
 
   try {
@@ -28,7 +32,11 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function findAll(req: Request, res: Response, next: NextFunction) {
+export async function findAll(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   try {
     const ordenes = await getCustomRepository(OrdenRepository).findAll()
     res.json(ordenes)
@@ -41,7 +49,7 @@ export async function findByUser(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   const { usuario_id } = req.params
 
   try {
@@ -58,7 +66,7 @@ export async function deleteOrden(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   const { orden_id } = req.params
   try {
     const deleted = await getCustomRepository(OrdenRepository).deleteOrden(
@@ -70,7 +78,11 @@ export async function deleteOrden(
   }
 }
 
-export async function update(req: Request, res: Response, next: NextFunction) {
+export async function update(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const { orden_id } = req.params
   try {
     const updated = await getCustomRepository(OrdenRepository).update(

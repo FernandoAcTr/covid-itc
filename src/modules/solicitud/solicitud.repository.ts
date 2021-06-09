@@ -1,4 +1,9 @@
-import { AbstractRepository, EntityRepository, In } from 'typeorm'
+import pdf from 'html-pdf'
+import dateformat from 'dateformat'
+import { AbstractRepository, EntityRepository } from 'typeorm'
+import { compile } from '../../helpers/compile_hbs'
+import { UsuarioRepository } from '../usuario/usuario.repository'
+import { ErrorHandler } from '../../middlewares'
 import {
   Medico,
   Multimedia,
@@ -6,21 +11,19 @@ import {
   SolicitudStatusEnum,
   Usuario,
   Medicamento,
+  SolicitudMedicamento,
 } from '../../entities'
-import { ErrorHandler } from '../../middlewares'
 import {
   deleteFiles,
   transformFilesInMultimedia,
 } from '../../helpers/file_storage'
-import { compile } from '../../helpers/compile_hbs'
-import pdf from 'html-pdf'
-import dateformat from 'dateformat'
-import { UsuarioRepository } from '../usuario/usuario.repository'
-import { SolicitudMedicamento } from '../../entities/solicitud_medicamento.entity'
 
 @EntityRepository(SolicitudConsulta)
 export class SolicitudConsultaRepository extends AbstractRepository<SolicitudConsulta> {
-  async createSolicitud(body: any, files: Express.Multer.File[]) {
+  async createSolicitud(
+    body: any,
+    files: Express.Multer.File[]
+  ): Promise<SolicitudConsulta> {
     const { usuario_id, sintomas, modalidad } = body
 
     const usuario = await this.manager
@@ -39,7 +42,7 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
     return await this.repository.save(solicitud)
   }
 
-  async update(solicitud_id: string, body: any) {
+  async update(solicitud_id: string, body: any): Promise<SolicitudConsulta> {
     const { status, medico_id, fecha_atencion, diagnostico, medicamentos } =
       body
     const solicitud = await this.repository.findOneOrFail({
@@ -80,11 +83,11 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
     return await this.repository.save(solicitud)
   }
 
-  async findAll() {
+  async findAll(): Promise<SolicitudConsulta[]> {
     return await this.repository.find()
   }
 
-  async findOne(solicitud_id: string) {
+  async findOne(solicitud_id: string): Promise<SolicitudConsulta> {
     const solicitud = await this.repository.findOne({
       where: { solicitud_id },
     })
@@ -93,33 +96,33 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
     return solicitud
   }
 
-  async findAtendidas() {
+  async findAtendidas(): Promise<SolicitudConsulta[]> {
     return await this.repository.find({
       where: { status: SolicitudStatusEnum.ATENDIDA },
     })
   }
 
-  async findPendientes() {
+  async findPendientes(): Promise<SolicitudConsulta[]> {
     return await this.repository.find({
       where: { status: SolicitudStatusEnum.PENDIENTE },
     })
   }
 
-  async findByUser(usuario_id: string) {
+  async findByUser(usuario_id: string): Promise<SolicitudConsulta[]> {
     const usuario = await this.manager
       .getRepository(Usuario)
       .findOneOrFail({ where: { usuario_id }, relations: ['consultas'] })
     return usuario.consultas
   }
 
-  async findByMedico(medico_id: string) {
+  async findByMedico(medico_id: string): Promise<SolicitudConsulta[]> {
     const medico = await this.manager
       .getRepository(Medico)
       .findOneOrFail({ where: { medico_id }, relations: ['consultas'] })
     return medico.consultas
   }
 
-  async delete(solicitud_id: string) {
+  async delete(solicitud_id: string): Promise<SolicitudConsulta> {
     const solicitud = await this.repository.findOneOrFail({
       where: { solicitud_id },
     })

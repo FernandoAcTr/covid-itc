@@ -3,7 +3,11 @@ import { getCustomRepository } from 'typeorm'
 import { UsuarioRepository } from '../usuario/usuario.repository'
 import { MedicoRepository } from './medico.repository'
 
-export async function signup(req: Request, res: Response, next: NextFunction) {
+export async function signup(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const userRepository = getCustomRepository(UsuarioRepository)
   const medicoRepository = getCustomRepository(MedicoRepository)
 
@@ -19,7 +23,11 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function findOne(req: Request, res: Response, next: NextFunction) {
+export async function findOne(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const { medico_id } = req.params
   const medicoRepository = getCustomRepository(MedicoRepository)
   try {
@@ -30,13 +38,25 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function findAll(req: Request, res: Response, next: NextFunction) {
-  const medicoRepository = getCustomRepository(MedicoRepository)
-  const medicos = await medicoRepository.findAll()
-  res.json(medicos)
+export async function findAll(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const medicoRepository = getCustomRepository(MedicoRepository)
+    const medicos = await medicoRepository.findAll()
+    res.json(medicos)
+  } catch (error) {
+    next(error)
+  }
 }
 
-export async function edit(req: Request, res: Response, next: NextFunction) {
+export async function edit(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const { medico_id } = req.params
   const medicoRepository = getCustomRepository(MedicoRepository)
 

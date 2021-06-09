@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { check } from 'express-validator'
 import * as Controller from './encuesta.controller'
+import passport from '../../libs/passport'
 import {
   validateModality,
   validateRespuestas,
@@ -8,7 +9,6 @@ import {
   verifyRol,
   RolEnum,
 } from '../../middlewares/'
-import passport from '../../libs/passport'
 
 const router = Router()
 

@@ -7,7 +7,7 @@ export async function verifyResourceReceta(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   const user = req.user
   const solicitud_id = req.params.solicitud_id
   const solicitud = await getRepository(SolicitudConsulta).findOne({

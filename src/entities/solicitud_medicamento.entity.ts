@@ -32,7 +32,7 @@ export class SolicitudMedicamento {
   @Column()
   receta: string
 
-  toJSON() {
+  toJSON(): any {
     const { solicitud_consulta, id_relation, ...other } = this
     return other
   }

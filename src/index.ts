@@ -18,12 +18,9 @@ class Server {
 
   constructor() {
     this.app = express()
-    this.config()
     this.middlewares()
     this.routes()
   }
-
-  config() {}
 
   middlewares() {
     this.app.use(rateLimiterMiddleware)

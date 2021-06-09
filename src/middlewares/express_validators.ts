@@ -10,12 +10,14 @@ import {
   SolicitudStatusEnum,
 } from '../entities'
 
-export async function existCarrer(carrera_id: any) {
-  const carrera = await getRepository(Carrera).findOne(carrera_id)
+export async function existCarrer(carrera_id: number): Promise<void> {
+  const carrera = await getRepository(Carrera).findOne({
+    where: { carrera_id },
+  })
   if (!carrera) throw new Error('No existe una carrera con ese id')
 }
 
-export function validateModality(modalidad: string) {
+export function validateModality(modalidad: string): boolean {
   const enumValues = Object.values(ModalidadEnum)
   if (enumValues.includes(modalidad as ModalidadEnum)) return true
   throw new Error(
@@ -23,7 +25,7 @@ export function validateModality(modalidad: string) {
   )
 }
 
-export function validateRol(rol: string) {
+export function validateRol(rol: string): boolean {
   const enumValues = Object.values(RolEnum)
 
   if (!enumValues.includes(rol as RolEnum)) {
@@ -35,7 +37,7 @@ export function validateRol(rol: string) {
   return true
 }
 
-export function validateAlertStatus(status: string) {
+export function validateAlertStatus(status: string): boolean {
   const enumValues = Object.values(AlertEnum)
   if (enumValues.includes(status as AlertEnum)) return true
 
@@ -44,7 +46,7 @@ export function validateAlertStatus(status: string) {
   )
 }
 
-export function validateRespuestas(respuestas: Array<string>) {
+export function validateRespuestas(respuestas: Array<string>): boolean {
   const resValues = Object.values(RespuestaEnum)
   respuestas.forEach((res) => {
     if (!resValues.includes(res as RespuestaEnum))
@@ -53,7 +55,7 @@ export function validateRespuestas(respuestas: Array<string>) {
   return true
 }
 
-export function validateOrderResult(resultado: string) {
+export function validateOrderResult(resultado: string): boolean {
   const enumValues = Object.values(ResultadoEnum)
   if (enumValues.includes(resultado as ResultadoEnum)) return true
 
@@ -62,7 +64,7 @@ export function validateOrderResult(resultado: string) {
   )
 }
 
-export function validateModalidadConsulta(modalidad: string) {
+export function validateModalidadConsulta(modalidad: string): boolean {
   const enumValues = Object.values(ModalidadConsultaEnum)
   if (enumValues.includes(modalidad as ModalidadConsultaEnum)) return true
   throw new Error(
@@ -71,7 +73,7 @@ export function validateModalidadConsulta(modalidad: string) {
   )
 }
 
-export function validateConsultaStatus(status: string) {
+export function validateConsultaStatus(status: string): boolean {
   const enumValues = Object.values(SolicitudStatusEnum)
   if (enumValues.includes(status as SolicitudStatusEnum)) return true
   throw new Error(

@@ -2,7 +2,11 @@ import { NextFunction, Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
 import { CarreraRepository } from './carrera.repository'
 
-export async function store(req: Request, res: Response, next: NextFunction) {
+export async function store(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const carreraRepository = getCustomRepository(CarreraRepository)
 
   try {
@@ -16,7 +20,11 @@ export async function store(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function findOne(req: Request, res: Response, next: NextFunction) {
+export async function findOne(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const { carrera_id } = req.params
   const carreraRepository = getCustomRepository(CarreraRepository)
 
@@ -28,13 +36,25 @@ export async function findOne(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function findAll(req: Request, res: Response, next: NextFunction) {
-  const studentRepository = getCustomRepository(CarreraRepository)
-  const estudiantes = await studentRepository.findAll()
-  res.json(estudiantes)
+export async function findAll(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const studentRepository = getCustomRepository(CarreraRepository)
+    const estudiantes = await studentRepository.findAll()
+    res.json(estudiantes)
+  } catch (error) {
+    next(error)
+  }
 }
 
-export async function edit(req: Request, res: Response, next: NextFunction) {
+export async function edit(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const { carrera_id } = req.params
   const carreraRepository = getCustomRepository(CarreraRepository)
 
@@ -50,7 +70,7 @@ export async function deleteCarrera(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   const { carrera_id } = req.params
   try {
     const deleted = await getCustomRepository(CarreraRepository).delete(

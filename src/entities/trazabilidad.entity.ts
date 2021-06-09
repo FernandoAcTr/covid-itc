@@ -30,7 +30,7 @@ export class Trazabilidad {
   @Column({ default: false })
   avisado: boolean
 
-  toJSON() {
+  toJSON(): any {
     const trazabilidad: any = this
     delete trazabilidad.contacto.rol
     delete trazabilidad.contacto.requireSurvey

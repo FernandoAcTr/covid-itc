@@ -45,7 +45,7 @@ export class OrdenDePrueba {
   @JoinColumn({ name: 'tipo_id' })
   tipo: TipoPrueba
 
-  toJSON() {
+  toJSON(): any {
     const orden: any = this
     delete orden.usuario.rol
     delete orden.usuario.habilitado

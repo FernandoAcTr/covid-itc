@@ -73,7 +73,7 @@ export class Usuario {
   @OneToMany(() => Trazabilidad, (trazabilidad) => trazabilidad.usuario)
   trazabilidad: Trazabilidad[]
 
-  toJSON() {
+  toJSON(): any {
     const { password, ...other } = this as any
     if (other.estudiante === null) delete other.estudiante
     if (other.personal === null) delete other.personal

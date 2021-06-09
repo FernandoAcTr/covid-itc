@@ -1,13 +1,13 @@
 import { Router } from 'express'
 import * as Controller from './ordenes.controller'
 import { check } from 'express-validator'
+import passport from '../../libs/passport'
 import {
   validateBody,
   validateOrderResult,
   verifyRol,
   RolEnum,
 } from '../../middlewares/'
-import passport from '../../libs/passport'
 
 const router = Router()
 

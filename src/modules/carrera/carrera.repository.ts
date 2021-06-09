@@ -1,12 +1,10 @@
-import { AbstractRepository, In } from 'typeorm'
-import { Carrera } from '../../entities'
-import { EntityRepository } from 'typeorm'
+import { AbstractRepository, EntityRepository } from 'typeorm'
+import { Carrera, Departamento } from '../../entities'
 import { ErrorHandler } from '../../middlewares/error_handler'
-import { Departamento } from '../../entities/departamento.entity'
 
 @EntityRepository(Carrera)
 export class CarreraRepository extends AbstractRepository<Carrera> {
-  async store(body: any) {
+  async store(body: any): Promise<Carrera> {
     const { nombre, departamento_id } = body
 
     //find department
@@ -21,7 +19,7 @@ export class CarreraRepository extends AbstractRepository<Carrera> {
     return await this.repository.save(carrera)
   }
 
-  async findOne(carrera_id: string) {
+  async findOne(carrera_id: string): Promise<Carrera> {
     const carrera = await this.repository.findOne({ where: { carrera_id } })
 
     if (!carrera)
@@ -30,12 +28,12 @@ export class CarreraRepository extends AbstractRepository<Carrera> {
     return carrera
   }
 
-  async findAll() {
+  async findAll(): Promise<Carrera[]> {
     const carreras = await this.repository.find()
     return carreras
   }
 
-  async update(carrera_id: string, body: any) {
+  async update(carrera_id: string, body: any): Promise<Carrera> {
     const { nombre, departamento_id } = body
 
     //find department
@@ -52,7 +50,7 @@ export class CarreraRepository extends AbstractRepository<Carrera> {
     return await this.repository.save(carrera)
   }
 
-  async delete(carrera_id: string) {
+  async delete(carrera_id: string): Promise<Carrera> {
     const carrera = await this.repository.findOneOrFail({
       where: { carrera_id },
     })

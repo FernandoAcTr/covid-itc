@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm'
 import { ModalidadEncuesta, ModalidadEnum } from '../entities'
 
-export async function requireSurvey() {
+export async function requireSurvey(): Promise<boolean> {
   const posibilidades = {
     [ModalidadEnum.ALEATORIA]: () => Math.random() > 0.5,
     [ModalidadEnum.OBLIGATORIA]: () => true,

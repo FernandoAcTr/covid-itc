@@ -54,7 +54,7 @@ const upload = multer({
   limits: { fileSize: 50 * 1024 * 1024 },
 }).fields([{ name: 'evidencias', maxCount: 3 }])
 
-export default (req: Request, res: Response, next: NextFunction) => {
+export default (req: Request, res: Response, next: NextFunction): void => {
   upload(req, res, (err: any) => {
     if (err) {
       return res.status(400).json({

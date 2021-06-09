@@ -33,7 +33,7 @@ export class Encuesta {
   })
   respuestas: Respuesta[]
 
-  toJSON() {
+  toJSON(): any {
     const resp: any = this
     delete resp.usuario?.rol
     return resp

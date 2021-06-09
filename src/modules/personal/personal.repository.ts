@@ -1,13 +1,12 @@
 import { AbstractRepository, EntityRepository, Equal } from 'typeorm'
-import { In } from 'typeorm'
 import { Departamento, Personal, Rol, RolEnum, Usuario } from '../../entities'
 import { requireSurvey } from '../../helpers/require_surver.helper'
 import { UsuarioRepository } from '../usuario/usuario.repository'
-import { ErrorHandler } from '../../middlewares/error_handler'
+import { ErrorHandler } from '../../middlewares'
 
 @EntityRepository(Personal)
 export class PersonalRepository extends AbstractRepository<Personal> {
-  async store(body: any) {
+  async store(body: any): Promise<Personal> {
     const {
       nombre,
       a_paterno,
@@ -49,7 +48,7 @@ export class PersonalRepository extends AbstractRepository<Personal> {
     return await this.repository.save(personal)
   }
 
-  async findAll() {
+  async findAll(): Promise<Personal[]> {
     const personal = await this.manager
       .createQueryBuilder(Personal, 'p')
       .leftJoinAndSelect('p.usuario', 'u')
@@ -60,7 +59,7 @@ export class PersonalRepository extends AbstractRepository<Personal> {
     return personal
   }
 
-  async findOne(personal_id: string) {
+  async findOne(personal_id: string): Promise<Personal> {
     const personal = await this.repository.findOne(personal_id, {
       relations: ['usuario'],
     })
@@ -74,7 +73,7 @@ export class PersonalRepository extends AbstractRepository<Personal> {
     return personal
   }
 
-  async edit(personal_id: string, body: any) {
+  async edit(personal_id: string, body: any): Promise<Personal> {
     const { nombre, a_paterno, a_materno, departamento_id, rfc } = body
 
     //find departament

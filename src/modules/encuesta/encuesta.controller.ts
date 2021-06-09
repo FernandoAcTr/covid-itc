@@ -7,7 +7,7 @@ export async function changeModality(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   const { modalidad } = req.body
 
   try {
@@ -25,7 +25,7 @@ export async function getModality(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const modalidad = await getCustomRepository(
       ModalidadEncuestaRepository
@@ -40,7 +40,7 @@ export async function getPreguntas(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const preguntas = await getCustomRepository(
       EncuestaRepository
@@ -55,7 +55,7 @@ export async function createEncuesta(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const encuesta = await getCustomRepository(
       EncuestaRepository
@@ -68,7 +68,11 @@ export async function createEncuesta(
   }
 }
 
-export async function findOne(req: Request, res: Response, next: NextFunction) {
+export async function findOne(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const { encuesta_id } = req.params
   try {
     const encuesta = await getCustomRepository(EncuestaRepository).findOne(
@@ -85,7 +89,7 @@ export async function findAllByUserId(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   const { usuario_id } = req.params
 
   try {
@@ -99,7 +103,11 @@ export async function findAllByUserId(
   }
 }
 
-export async function findAll(req: Request, res: Response, next: NextFunction) {
+export async function findAll(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const symtopms = req.query.sintomas
   try {
     let encuestas = null

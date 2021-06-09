@@ -1,13 +1,13 @@
 import { Router } from 'express'
 import * as Controller from './usuario.controller'
 import { check } from 'express-validator'
+import passport from '../../libs/passport'
 import {
   validateBody,
   validateRol,
   RolEnum,
   verifyRol,
 } from '../../middlewares'
-import passport from '../../libs/passport'
 
 const router = Router()
 

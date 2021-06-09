@@ -1,10 +1,10 @@
 import { AbstractRepository, EntityRepository } from 'typeorm'
 import { Medicamento } from '../../entities'
-import { ErrorHandler } from '../../middlewares/error_handler'
+import { ErrorHandler } from '../../middlewares'
 
 @EntityRepository(Medicamento)
 export class MedicamentoRepository extends AbstractRepository<Medicamento> {
-  async findOne(medicamento_id: string) {
+  async findOne(medicamento_id: string): Promise<Medicamento> {
     const medicamento = await this.repository.findOne({
       where: { medicamento_id },
     })
@@ -12,17 +12,17 @@ export class MedicamentoRepository extends AbstractRepository<Medicamento> {
     return medicamento
   }
 
-  async findAll() {
+  async findAll(): Promise<Medicamento[]> {
     return await this.repository.find()
   }
 
-  async store(descripcion: string) {
+  async store(descripcion: string): Promise<Medicamento> {
     const medicamento = new Medicamento()
     medicamento.descripcion = descripcion
     return await this.repository.save(medicamento)
   }
 
-  async delete(medicamento_id: string) {
+  async delete(medicamento_id: string): Promise<Medicamento> {
     const medicamento = await this.repository.findOneOrFail({
       where: { medicamento_id },
     })
@@ -30,7 +30,10 @@ export class MedicamentoRepository extends AbstractRepository<Medicamento> {
     return await this.repository.remove(medicamento)
   }
 
-  async update(medicamento_id: string, descripcion: string) {
+  async update(
+    medicamento_id: string,
+    descripcion: string
+  ): Promise<Medicamento> {
     const medicamento = await this.repository.findOneOrFail({
       where: { medicamento_id },
     })

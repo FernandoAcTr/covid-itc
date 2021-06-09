@@ -5,7 +5,7 @@ export async function getCasosDetectados(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const reportesService = new ReportesService()
     const data = await reportesService.getCasosDetectados()
@@ -19,7 +19,7 @@ export async function getCasosDetectadosPDF(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const reportesService = new ReportesService()
     const pdf = await reportesService.getCasosDetectadosPDF()
@@ -37,7 +37,7 @@ export async function getTotalCasos(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const reportesService = new ReportesService()
     const data = await reportesService.getTotalCasos()
@@ -51,7 +51,7 @@ export async function getTotalEncuestas(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const reportesService = new ReportesService()
     const data = await reportesService.getTotalncuestas()
@@ -65,7 +65,7 @@ export async function getTotalConsultas(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const reportesService = new ReportesService()
     const data = await reportesService.getTotalConsultas()

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 
 export class ErrorHandler extends Error {
   statusCode: number
@@ -14,14 +14,12 @@ export class ErrorHandler extends Error {
 export const handleErrorMiddleware = (
   err: any,
   req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+  res: Response
+): void => {
   console.log(err)
 
-  let statusCode, message
-  statusCode = err instanceof ErrorHandler ? err.statusCode : 500
-  message = err.message
+  const statusCode = err instanceof ErrorHandler ? err.statusCode : 500
+  const message = err.message
   res.status(statusCode).json({
     statusCode,
     message,

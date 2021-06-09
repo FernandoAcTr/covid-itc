@@ -1,10 +1,10 @@
+import pdf from 'html-pdf'
 import { getConnection } from 'typeorm'
 import { Carrera, Departamento } from '../../entities'
 import { compile } from '../../helpers/compile_hbs'
-import pdf from 'html-pdf'
 
 export class ReportesService {
-  async getCasosDetectados() {
+  async getCasosDetectados(): Promise<any> {
     const conn = getConnection()
     const estudiantes = await conn.query(
       `select concat_ws(' ',e.nombre,e.a_paterno,e.a_materno) as nombre,
@@ -33,7 +33,7 @@ export class ReportesService {
     return { estudiantes, personal }
   }
 
-  async getTotalCasos() {
+  async getTotalCasos(): Promise<any> {
     const conn = getConnection()
 
     const carreras = await conn.manager
@@ -83,7 +83,7 @@ export class ReportesService {
     return { carrera: total_carrera, departamento: total_departamento }
   }
 
-  async getTotalncuestas() {
+  async getTotalncuestas(): Promise<any> {
     const conn = getConnection()
 
     const carreras = await conn.manager
@@ -131,7 +131,7 @@ export class ReportesService {
     return { carrera: total_carrera, departamento: total_departamento }
   }
 
-  async getTotalConsultas() {
+  async getTotalConsultas(): Promise<any> {
     const consultas = await getConnection().query(
       `select concat_ws(' ',m.nombre,m.a_paterno,m.a_materno) as medico, count(*) as total_consultas
       from usuario u

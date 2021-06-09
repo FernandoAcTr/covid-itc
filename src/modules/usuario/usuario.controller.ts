@@ -1,9 +1,13 @@
 import { Request, Response, NextFunction } from 'express'
 import { getCustomRepository } from 'typeorm'
 import { UsuarioRepository } from './usuario.repository'
-import { ErrorHandler } from '../../middlewares/error_handler'
+import { ErrorHandler } from '../../middlewares'
 
-export async function login(req: Request, res: Response, next: NextFunction) {
+export async function login(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const { email, password } = req.body
   const userRepository = getCustomRepository(UsuarioRepository)
   try {
@@ -26,7 +30,11 @@ export async function login(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function findAll(req: Request, res: Response, next: NextFunction) {
+export async function findAll(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const userRepository = getCustomRepository(UsuarioRepository)
 
   try {
@@ -37,7 +45,11 @@ export async function findAll(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export async function findOne(req: Request, res: Response, next: NextFunction) {
+export async function findOne(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   const userRepository = getCustomRepository(UsuarioRepository)
   try {
     const { usuario_id } = req.params
@@ -52,7 +64,7 @@ export async function disableUser(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   const { usuario_id } = req.params
   const userRepository = getCustomRepository(UsuarioRepository)
 
@@ -68,7 +80,7 @@ export async function updateUser(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   const { usuario_id } = req.params
   const userRepository = getCustomRepository(UsuarioRepository)
   try {

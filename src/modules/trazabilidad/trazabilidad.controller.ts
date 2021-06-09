@@ -6,7 +6,7 @@ export async function getTrazability(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const trazabilidad = await getCustomRepository(
       TrazabilidadRepository
@@ -21,7 +21,7 @@ export async function addContact(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const trazabilidad = await getCustomRepository(
       TrazabilidadRepository
@@ -36,7 +36,7 @@ export async function deleteContact(
   req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   try {
     const deleted = await getCustomRepository(
       TrazabilidadRepository
@@ -47,7 +47,11 @@ export async function deleteContact(
   }
 }
 
-export async function update(req: Request, res: Response, next: NextFunction) {
+export async function update(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   try {
     const updated = await getCustomRepository(TrazabilidadRepository).update(
       Number(req.params.trazabilidad_id),

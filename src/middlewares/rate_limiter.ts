@@ -11,7 +11,7 @@ export const rateLimiterMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): void => {
   rateLimiter
     .consume(req.ip)
     .then(() => {

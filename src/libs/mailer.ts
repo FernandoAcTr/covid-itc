@@ -8,7 +8,7 @@ export function sendMail(
   subject: string,
   html: string,
   attachments?: Array<any>
-) {
+): void {
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,

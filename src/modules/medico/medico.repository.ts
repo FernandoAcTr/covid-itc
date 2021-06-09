@@ -1,13 +1,11 @@
-import { Equal } from 'typeorm'
-import { Medico, Rol, RolEnum } from '../../entities'
+import { Equal, EntityRepository, AbstractRepository } from 'typeorm'
+import { Medico, Rol, RolEnum, Usuario } from '../../entities'
 import { UsuarioRepository } from '../usuario/usuario.repository'
-import { Usuario } from '../../entities/usuario.entity'
-import { ErrorHandler } from '../../middlewares/error_handler'
-import { EntityRepository, AbstractRepository } from 'typeorm'
+import { ErrorHandler } from '../../middlewares/'
 
 @EntityRepository(Medico)
 export class MedicoRepository extends AbstractRepository<Medico> {
-  async store(body: any) {
+  async store(body: any): Promise<Medico> {
     const { nombre, a_paterno, a_materno, rfc, cedula, email, password } = body
     const userRepository = this.manager.getCustomRepository(UsuarioRepository)
 
@@ -35,7 +33,7 @@ export class MedicoRepository extends AbstractRepository<Medico> {
     return await this.repository.save(medico)
   }
 
-  async findOne(medico_id: string) {
+  async findOne(medico_id: string): Promise<Medico> {
     const medico = await this.repository.findOne(medico_id, {
       relations: ['usuario'],
     })
@@ -45,7 +43,7 @@ export class MedicoRepository extends AbstractRepository<Medico> {
     return medico
   }
 
-  async findAll() {
+  async findAll(): Promise<Medico[]> {
     const medicos = await this.manager
       .createQueryBuilder(Medico, 'm')
       .leftJoinAndSelect('m.usuario', 'u')
@@ -55,7 +53,7 @@ export class MedicoRepository extends AbstractRepository<Medico> {
     return medicos
   }
 
-  async edit(medico_id: any, body: any) {
+  async edit(medico_id: string, body: any): Promise<Medico> {
     const { nombre, a_paterno, a_materno, rfc, cedula } = body
     const medico = await this.repository.findOneOrFail(medico_id)
     medico.nombre = nombre || medico.nombre

@@ -1,10 +1,10 @@
 import { EntityRepository, AbstractRepository } from 'typeorm'
 import { Medico, OrdenDePrueba, TipoPrueba, Usuario } from '../../entities'
-import { ErrorHandler } from '../../middlewares/error_handler'
+import { ErrorHandler } from '../../middlewares'
 
 @EntityRepository(OrdenDePrueba)
 export class OrdenRepository extends AbstractRepository<OrdenDePrueba> {
-  async createOrder(body: any) {
+  async createOrder(body: any): Promise<OrdenDePrueba> {
     const { usuario_id, medico_id, tipo_id } = body
 
     const tipoPrueba = await this.manager
@@ -27,31 +27,31 @@ export class OrdenRepository extends AbstractRepository<OrdenDePrueba> {
     return await this.repository.save(orden)
   }
 
-  async findOne(orden_id: string) {
+  async findOne(orden_id: string): Promise<OrdenDePrueba> {
     const orden = await this.repository.findOne({ where: { orden_id } })
     if (!orden) throw new ErrorHandler(404, 'Orden no encontrada')
 
     return orden
   }
 
-  async findAll() {
+  async findAll(): Promise<OrdenDePrueba[]> {
     return await this.repository.find()
   }
 
-  async findByUser(usuario_id: string) {
+  async findByUser(usuario_id: string): Promise<OrdenDePrueba[]> {
     const usuario = await this.manager
       .getRepository(Usuario)
       .findOneOrFail({ where: { usuario_id }, relations: ['ordenes'] })
     return usuario.ordenes
   }
 
-  async deleteOrden(orden_id: string) {
+  async deleteOrden(orden_id: string): Promise<OrdenDePrueba> {
     const orden = await this.repository.findOneOrFail({ where: { orden_id } })
     const deleted = await this.repository.remove(orden)
     return deleted
   }
 
-  async update(orden_id: string, body: any) {
+  async update(orden_id: string, body: any): Promise<OrdenDePrueba> {
     const { resultado, tipo_id, fecha_deteccion } = body
 
     const orden = await this.repository.findOneOrFail({ where: { orden_id } })

@@ -1,13 +1,12 @@
-import { AbstractRepository, Equal } from 'typeorm'
+import { AbstractRepository, Equal, EntityRepository } from 'typeorm'
 import { Carrera, Estudiante, Rol, RolEnum, Usuario } from '../../entities'
 import { requireSurvey } from '../../helpers/require_surver.helper'
 import { UsuarioRepository } from '../usuario/usuario.repository'
-import { EntityRepository } from 'typeorm'
-import { ErrorHandler } from '../../middlewares/error_handler'
+import { ErrorHandler } from '../../middlewares'
 
 @EntityRepository(Estudiante)
 export class StudentRepository extends AbstractRepository<Estudiante> {
-  async store(body: any) {
+  async store(body: any): Promise<Estudiante> {
     const { nombre, a_paterno, a_materno, carrera_id, email, password } = body
     const userRepository = this.manager.getCustomRepository(UsuarioRepository)
 
@@ -41,7 +40,7 @@ export class StudentRepository extends AbstractRepository<Estudiante> {
     return await this.repository.save(estudiante)
   }
 
-  async findOne(estudiante_id: string) {
+  async findOne(estudiante_id: string): Promise<Estudiante> {
     const estudiante = await this.repository.findOne(estudiante_id, {
       relations: ['usuario'],
     })
@@ -55,7 +54,7 @@ export class StudentRepository extends AbstractRepository<Estudiante> {
     return estudiante
   }
 
-  async findAll() {
+  async findAll(): Promise<Estudiante[]> {
     const estudiantes = await this.manager
       .createQueryBuilder(Estudiante, 'e')
       .leftJoinAndSelect('e.usuario', 'u')
@@ -66,7 +65,7 @@ export class StudentRepository extends AbstractRepository<Estudiante> {
     return estudiantes
   }
 
-  async update(estudiante_id: string, body: any) {
+  async update(estudiante_id: string, body: any): Promise<Estudiante> {
     const { nombre, a_paterno, a_materno, carrera_id } = body
 
     //find carrer

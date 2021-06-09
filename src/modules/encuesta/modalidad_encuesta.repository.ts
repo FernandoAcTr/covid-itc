@@ -1,10 +1,10 @@
 import { AbstractRepository, EntityRepository } from 'typeorm'
-import { ErrorHandler } from '../../middlewares/error_handler'
+import { ErrorHandler } from '../../middlewares'
 import { ModalidadEncuesta, ModalidadEnum } from '../../entities'
 
 @EntityRepository(ModalidadEncuesta)
 export class ModalidadEncuestaRepository extends AbstractRepository<ModalidadEncuesta> {
-  async getModality() {
+  async getModality(): Promise<ModalidadEncuesta> {
     const modalidad = await this.repository.find({
       order: { id: 'DESC' },
       take: 1,
@@ -16,7 +16,7 @@ export class ModalidadEncuestaRepository extends AbstractRepository<ModalidadEnc
     return modalidad[0] || null
   }
 
-  async setModality(modality: ModalidadEnum) {
+  async setModality(modality: ModalidadEnum): Promise<ModalidadEncuesta> {
     const sql = {
       [ModalidadEnum.ALEATORIA]:
         'update usuario set require_survey=true where random() > 0.5',

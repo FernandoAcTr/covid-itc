@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import * as Controller from './solicitud.controller'
 import { check } from 'express-validator'
+import passport from '../../libs/passport'
 import {
   validateModalidadConsulta,
   validateConsultaStatus,
@@ -8,7 +9,6 @@ import {
   verifyRol,
   verifyResourceReceta,
 } from '../../middlewares'
-import passport from '../../libs/passport'
 import { RolEnum } from '../../entities'
 
 const router = Router()
