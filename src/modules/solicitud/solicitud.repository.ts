@@ -85,7 +85,7 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
   }
 
   async findOne(solicitud_id: string) {
-    const solicitud = await this.repository.find({
+    const solicitud = await this.repository.findOne({
       where: { solicitud_id },
     })
     if (!solicitud)
