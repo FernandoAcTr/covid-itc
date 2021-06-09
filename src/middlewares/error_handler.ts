@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Request, Response, NextFunction } from 'express'
 
 export class ErrorHandler extends Error {
   statusCode: number
@@ -14,7 +14,8 @@ export class ErrorHandler extends Error {
 export const handleErrorMiddleware = (
   err: any,
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): void => {
   console.log(err)
 
