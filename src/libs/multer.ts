@@ -61,7 +61,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
         statusCode: 400,
         message: `${err.message} - ${err.code}: ${err.field}`,
       })
-    } else if (!req.fileValidator) {
+    } else if (req.files && !req.fileValidator) {
       const files = transformFilesInMultimedia((req.files as any)['evidencias'])
       deleteFiles(files)
       return res.status(400).json({
