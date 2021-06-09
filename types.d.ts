@@ -3,4 +3,7 @@ declare namespace Express {
     rol: { rol_id: number; rol: string }
     usuario_id: string
   }
+  export interface Request {
+    fileValidator: boolean
+  }
 }

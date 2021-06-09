@@ -4,6 +4,10 @@ import multerS3 from 'multer-s3'
 import { S3, Endpoint } from 'aws-sdk'
 import { Response, Request, NextFunction } from 'express'
 import { settings } from '../config/settings'
+import {
+  deleteFiles,
+  transformFilesInMultimedia,
+} from '../helpers/file_storage'
 
 const spacesEndpoint = new Endpoint(settings.AWS.S3_ENDPOINT!)
 export const s3 = new S3({
@@ -41,8 +45,10 @@ const upload = multer({
 
     if (validExtensions.includes(ext)) {
       callback(null, true)
+      req.fileValidator = true
     } else {
       callback(null, false)
+      req.fileValidator = false
     }
   },
   limits: { fileSize: 50 * 1024 * 1024 },
@@ -54,6 +60,13 @@ export default (req: Request, res: Response, next: NextFunction) => {
       return res.status(400).json({
         statusCode: 400,
         message: `${err.message} - ${err.code}: ${err.field}`,
+      })
+    } else if (!req.fileValidator) {
+      const files = transformFilesInMultimedia((req.files as any)['evidencias'])
+      deleteFiles(files)
+      return res.status(400).json({
+        statusCode: 400,
+        message: 'Tipo de archivo no permitido',
       })
     } else {
       next()

@@ -21,3 +21,15 @@ export async function deleteFiles(files: Multimedia[]) {
     deleteFile(file)
   }
 }
+
+export function transformFilesInMultimedia(files: Express.Multer.File[]) {
+  const multimedias: Multimedia[] = []
+  if (files)
+    for (const file of files) {
+      const multimedia = new Multimedia()
+      multimedia.url = (file as any).location
+      multimedia.public_id = (file as any).key
+      multimedias.push(multimedia)
+    }
+  return multimedias
+}

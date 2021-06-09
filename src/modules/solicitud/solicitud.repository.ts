@@ -8,7 +8,10 @@ import {
   Medicamento,
 } from '../../entities'
 import { ErrorHandler } from '../../middlewares'
-import { deleteFiles } from '../../helpers/file_storage'
+import {
+  deleteFiles,
+  transformFilesInMultimedia,
+} from '../../helpers/file_storage'
 import { compile } from '../../helpers/compile_hbs'
 import pdf from 'html-pdf'
 import dateformat from 'dateformat'
@@ -29,14 +32,7 @@ export class SolicitudConsultaRepository extends AbstractRepository<SolicitudCon
     solicitud.sintomas = sintomas
     solicitud.modalidad = modalidad
 
-    const evidencias: Multimedia[] = []
-    if (files)
-      for (const file of files) {
-        const evidencia = new Multimedia()
-        evidencia.url = (file as any).location
-        evidencia.public_id = (file as any).key
-        evidencias.push(evidencia)
-      }
+    const evidencias: Multimedia[] = transformFilesInMultimedia(files)
 
     solicitud.evidencias = evidencias
 
