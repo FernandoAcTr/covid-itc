@@ -37,7 +37,7 @@ const upload = multer({
       '.3gp',
       '.pdf',
     ]
-    const ext = path.extname(file.originalname)
+    const ext = path.extname(file.originalname).toLowerCase()
 
     if (validExtensions.includes(ext)) {
       callback(null, true)
