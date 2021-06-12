@@ -42,9 +42,9 @@ export async function findAll(
   next: NextFunction
 ): Promise<void> {
   try {
-    const studentRepository = getCustomRepository(CarreraRepository)
-    const estudiantes = await studentRepository.findAll()
-    res.json(estudiantes)
+    const carreraRepository = getCustomRepository(CarreraRepository)
+    const carreras = await carreraRepository.findAll()
+    res.json(carreras)
   } catch (error) {
     next(error)
   }

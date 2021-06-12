@@ -13,6 +13,7 @@ import RouterCarrera from './modules/carrera/carrera.routes'
 import RouterReportes from './modules/reportes/reportes.routes'
 import RouterTrazabilidad from './modules/trazabilidad/trazabilidad.routes'
 import RouterMedicamento from './modules/medicamento/medicamento.routes'
+import RouterDepartamento from './modules/departamento/departamento.routes'
 
 //importing all routes here
 router.use('/estudiantes', RouterStudent)
@@ -27,5 +28,6 @@ router.use('/carrera', RouterCarrera)
 router.use('/reportes', RouterReportes)
 router.use('/trazabilidad', RouterTrazabilidad)
 router.use('/medicamentos', RouterMedicamento)
+router.use('/departamento', RouterDepartamento)
 
 export default router
