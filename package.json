@@ -8,7 +8,7 @@
     "watch-ts": "tsc-watch --onSuccess \"node build/index\"",
     "dev": "concurrently \"npm:watch-*\"",
     "clean": "rm -rf build & rm -rf node_modules",
-    "build": "tsc",
+    "build": "mkdir build && cp -r src/templates build && tsc",
     "start": "node build",
     "prettier:fix": "prettier --config .prettierrc.json --write src/**/**/*.ts",
     "lint": "eslint . --ext .ts",
