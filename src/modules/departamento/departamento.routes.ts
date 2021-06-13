@@ -1,14 +1,10 @@
 import { Router } from 'express'
 import * as Controller from './departamento.controller'
 import { check } from 'express-validator'
-import {
-  validateBody,
-  verifyRol,
-  RolEnum,
-} from '../../middlewares'
+import { validateBody, verifyRol, RolEnum } from '../../middlewares'
 import passport from '../../libs/passport'
 
-const router = Router()  
+const router = Router()
 
 // ---------------------- Auth -------------------------------------
 router.use(passport.authenticate('jwt', { session: false }))
@@ -36,8 +32,10 @@ router.put(
   Controller.edit
 )
 
-router.delete('/:departamento_id',
-verifyRol(RolEnum.ADMINISTRADOR),
-Controller.deleteDepartamento)
+router.delete(
+  '/:departamento_id',
+  verifyRol(RolEnum.ADMINISTRADOR),
+  Controller.deleteDepartamento
+)
 
 export default router

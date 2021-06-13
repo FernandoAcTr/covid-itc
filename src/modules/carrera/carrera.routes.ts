@@ -28,6 +28,10 @@ router.get('/:carrera_id', verifyRol(RolEnum.ADMINISTRADOR), Controller.findOne)
 
 router.put('/:carrera_id', verifyRol(RolEnum.ADMINISTRADOR), Controller.edit)
 
-router.delete('/:carrera_id', verifyRol(RolEnum.ADMINISTRADOR), Controller.deleteCarrera)
+router.delete(
+  '/:carrera_id',
+  verifyRol(RolEnum.ADMINISTRADOR),
+  Controller.deleteCarrera
+)
 
 export default router
