@@ -24,7 +24,7 @@ export enum SolicitudStatusEnum {
   ATENDIDA = 'atendida',
 }
 
-@Entity({ name: 'solicitud_de_consulta' })
+@Entity({ name: 'solicitud_de_consulta', orderBy: { fecha_solicitud: 'DESC' } })
 export class SolicitudConsulta {
   @PrimaryGeneratedColumn('uuid')
   solicitud_id: string

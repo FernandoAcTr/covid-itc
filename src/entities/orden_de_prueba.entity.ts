@@ -14,7 +14,7 @@ export enum ResultadoEnum {
   POSITIVO = 'POSITIVO',
 }
 
-@Entity()
+@Entity({ orderBy: { fecha_deteccion: 'DESC' } })
 export class OrdenDePrueba {
   @PrimaryGeneratedColumn('uuid')
   orden_id: string
