@@ -94,3 +94,22 @@ export async function update(
     next(error)
   }
 }
+
+export async function getOrdenPDF(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const pdf = await getCustomRepository(OrdenRepository).createOrdenPDF(
+      req.params.orden_id
+    )
+    pdf.toStream((err, stream) => {
+      if (err) return next(err)
+      res.setHeader('Content-type', 'application/pdf')
+      stream.pipe(res)
+    })
+  } catch (error) {
+    next(error)
+  }
+}

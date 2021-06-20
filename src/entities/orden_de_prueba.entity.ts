@@ -4,6 +4,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm'
 import { Usuario } from './usuario.entity'
 import { Medico } from './medico.entity'
@@ -44,6 +45,9 @@ export class OrdenDePrueba {
   @ManyToOne(() => TipoPrueba, { eager: true })
   @JoinColumn({ name: 'tipo_id' })
   tipo: TipoPrueba
+
+  @CreateDateColumn()
+  create_at: Date
 
   toJSON(): any {
     const orden: any = this

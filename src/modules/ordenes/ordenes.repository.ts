@@ -1,6 +1,10 @@
+import pdf from 'html-pdf'
 import { EntityRepository, AbstractRepository } from 'typeorm'
 import { Medico, OrdenDePrueba, TipoPrueba, Usuario } from '../../entities'
+import { compile } from '../../helpers/compile_hbs'
 import { ErrorHandler } from '../../middlewares'
+import { UsuarioRepository } from '../usuario/usuario.repository'
+import dateformat from 'dateformat'
 
 @EntityRepository(OrdenDePrueba)
 export class OrdenRepository extends AbstractRepository<OrdenDePrueba> {
@@ -64,5 +68,41 @@ export class OrdenRepository extends AbstractRepository<OrdenDePrueba> {
     orden.fecha_deteccion = fecha_deteccion || orden.fecha_deteccion
 
     return await this.repository.save(orden)
+  }
+
+  async createOrdenPDF(orden_id: string): Promise<pdf.CreateResult> {
+    const orden = await this.repository.findOne({
+      where: { orden_id },
+    })
+    if (!orden) throw new ErrorHandler(404, 'Receta no encontrada')
+
+    const usuario = await this.manager
+      .getCustomRepository(UsuarioRepository)
+      .findOne(orden.usuario.usuario_id)
+    const paciente = usuario.personal || usuario.estudiante
+
+    console.log(orden)
+
+    const data = {
+      medico: {
+        nombre: `${orden.medico.nombre} ${orden.medico.a_paterno} ${orden.medico.a_materno}`,
+        cedula: orden.medico.cedula,
+      },
+      paciente: {
+        nombre: `${paciente.nombre} ${paciente.a_paterno} ${paciente.a_materno}`,
+      },
+      fecha: dateformat(orden.create_at, 'dd-mm-yyyy'),
+      tipo: orden.tipo.descripcion,
+    }
+
+    const html = compile('orden.hbs', data)
+
+    return pdf.create(html, {
+      width: '20cm',
+      height: '15cm',
+      border: { left: '2cm', right: '2cm', top: '1cm', bottom: '2cm' },
+      header: { height: '20mm' },
+      footer: { height: '28mm' },
+    })
   }
 }

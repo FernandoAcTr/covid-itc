@@ -55,4 +55,6 @@ router.put(
 )
 router.delete('/:orden_id', Controller.deleteOrden)
 
+router.get('/pdf/:orden_id', Controller.getOrdenPDF)
+
 export default router
