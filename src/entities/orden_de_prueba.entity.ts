@@ -46,6 +46,9 @@ export class OrdenDePrueba {
   @JoinColumn({ name: 'tipo_id' })
   tipo: TipoPrueba
 
+  @Column({ default: false })
+  alerta_enviada: boolean
+
   @CreateDateColumn()
   create_at: Date
 

@@ -56,7 +56,7 @@ export class OrdenRepository extends AbstractRepository<OrdenDePrueba> {
   }
 
   async update(orden_id: string, body: any): Promise<OrdenDePrueba> {
-    const { resultado, tipo_id, fecha_deteccion } = body
+    const { resultado, tipo_id, fecha_deteccion, alerta_enviada } = body
 
     const orden = await this.repository.findOneOrFail({ where: { orden_id } })
     const tipoPrueba = await this.manager
@@ -66,6 +66,7 @@ export class OrdenRepository extends AbstractRepository<OrdenDePrueba> {
     orden.tipo = tipoPrueba || orden.tipo
     orden.resultado = resultado || orden.resultado
     orden.fecha_deteccion = fecha_deteccion || orden.fecha_deteccion
+    if (alerta_enviada !== undefined) orden.alerta_enviada = alerta_enviada
 
     return await this.repository.save(orden)
   }
