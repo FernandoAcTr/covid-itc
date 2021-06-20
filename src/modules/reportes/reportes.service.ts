@@ -121,7 +121,8 @@ export class ReportesService {
       from usuario u
         join medico m on u.usuario_id = m.usuario_id
         join solicitud_de_consulta sc on sc.medico_id = m.medico_id
-      group by medico`
+      group by medico
+      order by total_consultas desc`
     )
     return { consultas }
   }
