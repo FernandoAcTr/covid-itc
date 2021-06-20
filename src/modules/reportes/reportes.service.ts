@@ -2,6 +2,7 @@ import pdf from 'html-pdf'
 import { getConnection } from 'typeorm'
 import { Carrera, Departamento } from '../../entities'
 import { compile } from '../../helpers/compile_hbs'
+import dateformat from 'dateformat'
 
 export class ReportesService {
   async getCasosDetectados(): Promise<any> {
@@ -144,6 +145,12 @@ export class ReportesService {
 
   async getCasosDetectadosPDF(): Promise<pdf.CreateResult> {
     const data = await this.getCasosDetectados()
+    data.estudiantes.forEach((item: any) => {
+      item.fecha_deteccion = dateformat(item.fecha_deteccion, 'dd-mm-yyyy')
+    })
+    data.personal.forEach((item: any) => {
+      item.fecha_deteccion = dateformat(item.fecha_deteccion, 'dd-mm-yyyy')
+    })
     const html = compile('casos_detectados.hbs', data)
     return createPDFReport(html)
   }
