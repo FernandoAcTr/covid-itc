@@ -44,13 +44,6 @@ export class ReportesService {
   async getTotalCasos(): Promise<any> {
     const conn = getConnection()
 
-    const carreras = await conn.manager
-      .getRepository(Carrera)
-      .find({ select: ['carrera'] })
-    const departamentos = await conn.manager
-      .getRepository(Departamento)
-      .find({ select: ['departamento'] })
-
     const total_carrera: any[] = await conn.query(
       `select c.carrera, count(*) as total_estudiantes
       from usuario u
@@ -61,12 +54,6 @@ export class ReportesService {
       group by c.carrera`
     )
 
-    carreras.forEach((row) => {
-      if (!total_carrera.find((c) => c.carrera === row.carrera)) {
-        total_carrera.push({ carrera: row.carrera, total_estudiantes: 0 })
-      }
-    })
-
     const total_departamento: any[] = await conn.query(
       `select d.departamento, count(*) as total_personal
       from usuario u
@@ -76,17 +63,6 @@ export class ReportesService {
       where op.resultado = 'POSITIVO'
       group by d.departamento`
     )
-
-    departamentos.forEach((row) => {
-      if (
-        !total_departamento.find((d) => d.departamento === row.departamento)
-      ) {
-        total_departamento.push({
-          departamento: row.departamento,
-          total_personal: 0,
-        })
-      }
-    })
 
     return { carrera: total_carrera, departamento: total_departamento }
   }
