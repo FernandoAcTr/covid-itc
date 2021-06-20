@@ -31,6 +31,13 @@ export class ReportesService {
       where op.resultado = 'POSITIVO';`
     )
 
+    estudiantes.forEach((item: any) => {
+      item.fecha_deteccion = dateformat(item.fecha_deteccion, 'dd-mm-yyyy')
+    })
+    personal.forEach((item: any) => {
+      item.fecha_deteccion = dateformat(item.fecha_deteccion, 'dd-mm-yyyy')
+    })
+
     return { estudiantes, personal }
   }
 
@@ -145,12 +152,6 @@ export class ReportesService {
 
   async getCasosDetectadosPDF(): Promise<pdf.CreateResult> {
     const data = await this.getCasosDetectados()
-    data.estudiantes.forEach((item: any) => {
-      item.fecha_deteccion = dateformat(item.fecha_deteccion, 'dd-mm-yyyy')
-    })
-    data.personal.forEach((item: any) => {
-      item.fecha_deteccion = dateformat(item.fecha_deteccion, 'dd-mm-yyyy')
-    })
     const html = compile('casos_detectados.hbs', data)
     return createPDFReport(html)
   }
