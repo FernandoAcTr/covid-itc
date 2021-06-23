@@ -6,6 +6,8 @@ import passport from '../../libs/passport'
 
 const router = Router()
 
+router.get('/', Controller.findAll)
+
 // ---------------------- Auth -------------------------------------
 router.use(passport.authenticate('jwt', { session: false }))
 
@@ -22,12 +24,14 @@ router.post(
   Controller.store
 )
 
-router.get('/', verifyRol(RolEnum.ADMINISTRADOR), Controller.findAll)
-
 router.get('/:carrera_id', verifyRol(RolEnum.ADMINISTRADOR), Controller.findOne)
 
 router.put('/:carrera_id', verifyRol(RolEnum.ADMINISTRADOR), Controller.edit)
 
-router.delete('/:carrera_id', verifyRol(RolEnum.ADMINISTRADOR), Controller.deleteCarrera)
+router.delete(
+  '/:carrera_id',
+  verifyRol(RolEnum.ADMINISTRADOR),
+  Controller.deleteCarrera
+)
 
 export default router

@@ -14,7 +14,7 @@ export enum AlertEnum {
   LEIDA = 'leida',
 }
 
-@Entity()
+@Entity({ orderBy: { create_at: 'DESC' } })
 export class Alerta {
   @PrimaryGeneratedColumn('uuid')
   alerta_id: string
