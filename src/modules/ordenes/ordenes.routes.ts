@@ -49,8 +49,10 @@ router.get(
 )
 router.put(
   '/:orden_id',
-  verifyRol(RolEnum.MEDICO),
-  [check('resultado').custom(validateOrderResult), validateBody],
+  verifyRol(
+    RolEnum.MEDICO,
+    RolEnum.MONITOR),
+  [check('resultado').optional().custom(validateOrderResult), validateBody],
   Controller.update
 )
 router.delete('/:orden_id', Controller.deleteOrden)

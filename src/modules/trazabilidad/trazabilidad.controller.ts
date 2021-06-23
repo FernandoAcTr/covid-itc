@@ -17,6 +17,19 @@ export async function getTrazability(
   }
 }
 
+export async function findAll(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const trazos = await getCustomRepository(TrazabilidadRepository).findAll()
+    res.json(trazos)
+  } catch (error) {
+    next(error)
+  }
+}
+
 export async function addContact(
   req: Request,
   res: Response,

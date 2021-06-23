@@ -14,6 +14,10 @@ export class TrazabilidadRepository extends AbstractRepository<Trazabilidad> {
     return usuario.trazabilidad
   }
 
+  async findAll(): Promise<Trazabilidad[]> {
+    return await this.repository.find()
+  }
+
   async addContact(body: any): Promise<Trazabilidad> {
     const { usuario_id, contacto_id, fecha } = body
 
