@@ -26,11 +26,13 @@ router.post(
 )
 
 router.get('/', verifyRol(RolEnum.ADMINISTRADOR), Controller.findAll)
+
 router.get(
   '/:medico_id',
   verifyRol(RolEnum.ADMINISTRADOR, RolEnum.MEDICO),
   Controller.findOne
 )
+
 router.put(
   '/:medico_id',
   verifyRol(RolEnum.ADMINISTRADOR, RolEnum.MEDICO),

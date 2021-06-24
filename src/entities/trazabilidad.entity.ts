@@ -12,7 +12,7 @@ export class Trazabilidad {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   trazabilidad_id: number
 
-  @ManyToOne(() => Usuario)
+  @ManyToOne(() => Usuario, { eager: true })
   @JoinColumn({
     name: 'usuario_id',
   })

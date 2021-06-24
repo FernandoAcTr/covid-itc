@@ -49,7 +49,8 @@ router.get(
 )
 router.put(
   '/:orden_id',
-  verifyRol(RolEnum.MEDICO),
+
+  verifyRol(RolEnum.MEDICO, RolEnum.MONITOR),
   [check('resultado').optional().custom(validateOrderResult), validateBody],
   Controller.update
 )

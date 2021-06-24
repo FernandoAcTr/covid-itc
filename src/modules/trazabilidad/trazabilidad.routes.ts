@@ -6,6 +6,9 @@ import { validateBody } from '../../middlewares/validate_body'
 const router = Router()
 
 router.get('/:usuario_id', Controller.getTrazability)
+
+router.get('/', Controller.findAll)
+
 router.post(
   '/',
   [
@@ -16,6 +19,7 @@ router.post(
   ],
   Controller.addContact
 )
+
 router.put(
   '/:trazabilidad_id',
   [
@@ -27,6 +31,7 @@ router.put(
   ],
   Controller.update
 )
+
 router.delete('/:trazabilidad_id', Controller.deleteContact)
 
 export default router
