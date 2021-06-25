@@ -35,7 +35,11 @@ export async function findAll(
   }
 }
 
-export async function addContact(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function addContact(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   try {
     const trazabilidad = await getCustomRepository(
       TrazabilidadRepository
@@ -43,7 +47,8 @@ export async function addContact(req: Request, res: Response, next: NextFunction
 
     const email = compile('alerta.hbs', {
       fecha: dateformat(Date.now(), 'dd-mm-yyyy'),
-      alerta: "Una persona con la que ha estado en contacto se encuentra contagiada de COVID-19, le recomendamos ir al medico a realizarse una prueba.",
+      alerta:
+        'Una persona con la que ha estado en contacto se encuentra contagiada de COVID-19, le recomendamos ir al medico a realizarse una prueba.',
       departamento: 'Departamento Médico',
     })
     sendMail(
