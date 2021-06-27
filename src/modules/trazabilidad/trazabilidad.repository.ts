@@ -14,8 +14,40 @@ export class TrazabilidadRepository extends AbstractRepository<Trazabilidad> {
     return usuario.trazabilidad
   }
 
-  async findAll(): Promise<Trazabilidad[]> {
-    return await this.repository.find()
+  async findAll(): Promise<any[]> {
+    // return await this.repository.find()
+    const sql = `
+    select 
+      trazabilidad_id, 
+      fecha, 
+      avisado, 
+      t.usuario_id,
+      t.contacto as contacto_id,
+      u.email as usuario_email,
+      concat_ws(
+        ' ',
+        coalesce(e.nombre, p.nombre, m.nombre),
+        coalesce(e.a_paterno, p.a_paterno, m.a_paterno),
+        coalesce(e.a_materno, p.a_materno, m.a_materno)
+      ) as usuario,
+      concat_ws(
+        ' ',
+        coalesce(e_c.nombre, p_c.nombre, m_c.nombre),
+        coalesce(e_c.a_paterno, p_c.a_paterno, m_c.a_paterno),
+        coalesce(e_c.a_materno, p_c.a_materno, m_c.a_materno)
+      ) as contacto
+    from trazabilidad t
+      left join estudiante e on t.usuario_id = e.usuario_id	
+      left join medico m on t.usuario_id = m.usuario_id	
+      left join personal p on t.usuario_id = p.usuario_id 
+      left join estudiante e_c on t.contacto = e_c.usuario_id	
+      left join medico m_c on t.contacto = m_c.usuario_id	
+      left join personal p_c on t.contacto = p_c.usuario_id
+      left join usuario u on t.usuario_id = u.usuario_id;  
+    `
+    const resp = await this.manager.query(sql)
+    console.log(resp)
+    return resp
   }
 
   async addContact(body: any): Promise<Trazabilidad> {
