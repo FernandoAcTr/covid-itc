@@ -15,6 +15,7 @@ import RouterTrazabilidad from './modules/trazabilidad/trazabilidad.routes'
 import RouterMedicamento from './modules/medicamento/medicamento.routes'
 import RouterDepartamento from './modules/departamento/departamento.routes'
 import RouterTipoPrueba from './modules/tipo_prueba/tipo_prueba.routes'
+import RouterDashboard from './modules/dashboard/dashboard.routes'
 
 //importing all routes here
 router.use('/estudiantes', RouterStudent)
@@ -30,6 +31,6 @@ router.use('/reportes', RouterReportes)
 router.use('/trazabilidad', RouterTrazabilidad)
 router.use('/medicamentos', RouterMedicamento)
 router.use('/departamento', RouterDepartamento)
-router.use('/tipo_prueba', RouterTipoPrueba)
+router.use('/dashboard', RouterDashboard)
 
 export default router
