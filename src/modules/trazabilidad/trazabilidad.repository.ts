@@ -5,13 +5,50 @@ import { ErrorHandler } from '../../middlewares'
 
 @EntityRepository(Trazabilidad)
 export class TrazabilidadRepository extends AbstractRepository<Trazabilidad> {
-  async getTrazabilidad(usuario_id: string): Promise<Trazabilidad[]> {
-    const usuario = await this.manager.getRepository(Usuario).findOne({
-      where: { usuario_id },
-      relations: ['trazabilidad'],
-    })
-    if (!usuario) throw new ErrorHandler(404, 'Usuario no encontrado')
-    return usuario.trazabilidad
+  async getTrazabilidad(usuario_id: string): Promise<any[]> {
+    // const usuario = await this.manager.getRepository(Usuario).findOne({
+    //   where: { usuario_id },
+    //   relations: ['trazabilidad'],
+    // })
+    // if (!usuario) throw new ErrorHandler(404, 'Usuario no encontrado')
+    // return usuario.trazabilidad
+
+    const sql = `
+    select 
+        trazabilidad_id, 
+        fecha, 
+        t.usuario_id,
+        t.contacto as contacto_id,
+      u_c.email as contacto_email,
+        concat_ws(
+          ' ',
+          coalesce(e.nombre, p.nombre, m.nombre),
+          coalesce(e.a_paterno, p.a_paterno, m.a_paterno),
+          coalesce(e.a_materno, p.a_materno, m.a_materno)
+        ) as usuario,
+        concat_ws(
+          ' ',
+          coalesce(e_c.nombre, p_c.nombre, m_c.nombre),
+          coalesce(e_c.a_paterno, p_c.a_paterno, m_c.a_paterno),
+          coalesce(e_c.a_materno, p_c.a_materno, m_c.a_materno)
+        ) as contacto,
+      ca.carrera, 
+      de.departamento
+      from trazabilidad t
+        left join estudiante e on t.usuario_id = e.usuario_id	
+        left join medico m on t.usuario_id = m.usuario_id	
+        left join personal p on t.usuario_id = p.usuario_id 
+      left join usuario u on t.usuario_id = u.usuario_id
+        left join estudiante e_c on t.contacto = e_c.usuario_id	
+        left join medico m_c on t.contacto = m_c.usuario_id	
+        left join personal p_c on t.contacto = p_c.usuario_id	  
+      left join usuario u_c on t.contacto = u_c.usuario_id
+      left join carrera ca on ca.carrera_id = e.carrera_id 
+      left join departamento de on de.departamento_id = p.departamento_id 
+    where u.usuario_id = $1`
+
+    const trazabilidad = await this.manager.query(sql, [usuario_id])
+    return trazabilidad
   }
 
   async findAll(): Promise<any[]> {
@@ -46,7 +83,6 @@ export class TrazabilidadRepository extends AbstractRepository<Trazabilidad> {
       left join usuario u on t.usuario_id = u.usuario_id;  
     `
     const resp = await this.manager.query(sql)
-    console.log(resp)
     return resp
   }
 
